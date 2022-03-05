@@ -1,4 +1,5 @@
 import pandas as pd
+from datetime import datetime as dt
 
 # 性別・年代別新規陽性者数（週別）
 # group by 都道府県、性別、10歳階級
@@ -14,8 +15,9 @@ def read_infected(file_path, encode):
     osaka_fu = osaka_fu.replace(['*'], 0).astype(int)
 
     # 行ごとの月情報
+    date_format = '%Y/%m/%d'
     df_month = pd.DataFrame({
-        'week': osaka_fu.index,
+        'week_start': [dt.strptime(week.split('~')[0], date_format) for week in osaka_fu.index],
         'month': osaka_fu.index.str.split("\~").str[0].str.replace(r'/[0-9]+$', '/1', regex=True)
     })
 

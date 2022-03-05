@@ -1,5 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import matplotlib.ticker as ticker
 from datetime import datetime as dt
 
 
@@ -26,50 +28,59 @@ def data_merge(target_columns, df_population, df_infected):
         month = _search_month(infectedRow['month'], df_population.index)
         population_series = df_population.loc[month]
 
-        df_result[infectedRow['week']] = infected_series * 100 / population_series
+        df_result[infectedRow['week_start']] = infected_series * 100 / population_series
 
     return df_result.T
 
 
 # 緊急事態宣言等の履歴
 # https://www.kwm.co.jp/blog/state-of-emergency/
-emergency_term = [
-    {'2020/4/7~2020/5/21', '緊急事態宣言'},  # 1回目
-    {'2021/1/14~2021/2/28', '緊急事態宣言'},  # 2回目
-    {'2021/4/25~2021/6/20', '緊急事態宣言'},  # 3回目、2回目のまん防に変わった
-    {'2021/8/2~2021/9/30', '緊急事態宣言'},  # 4回目
-    {'2021/4/5~2021/4/24', 'まん延防止等重点措置'},  # 1回目、3回目の緊急事態宣言に変わった
-    {'2021/6/21~2021/8/1', 'まん延防止等重点措置'},  # 2回目、4回目の緊急事態宣言に変わった
-    {'2022/1/27~2022/3/21', 'まん延防止等重点措置'},  # 3回目、延長中
+emergency_term = [  # 緊急事態宣言
+    [dt.fromisoformat('2020-04-07'), dt.fromisoformat('2020-05-21')],  # 1回目
+    [dt.fromisoformat('2021-01-14'), dt.fromisoformat('2021-02-28')],  # 2回目
+    [dt.fromisoformat('2021-04-25'), dt.fromisoformat('2021-06-20')],  # 3回目、2回目のまん防に変わった
+    [dt.fromisoformat('2021-08-02'), dt.fromisoformat('2021-09-30')],  # 4回目
+]
+semi_emergency_term = [  # まん延防止等重点措置
+    [dt.fromisoformat('2021-04-05'), dt.fromisoformat('2021-04-24')],  # 1回目、3回目の緊急事態宣言に変わった
+    [dt.fromisoformat('2021-06-21'), dt.fromisoformat('2021-08-01')],  # 2回目、4回目の緊急事態宣言に変わった
+    [dt.fromisoformat('2022-01-27'), dt.fromisoformat('2022-03-21')],  # 3回目、延長中
 ]
 
 
 def make_graph(df_result, prefectures, gender):
     # グラフ全体の設定
-    plt.figure(figsize=(15.0, 8.0))  # 横、縦
+    plt.figure(figsize=(10.0, 8.0))  # 横、縦
     plt.plot(df_result)
-    plt.legend(df_result.columns)
+    plt.legend(df_result.columns, loc='upper left')
     plt.title(f"{prefectures} [{gender}]", fontsize=14)
 
     # 背景 https://bunsekikobako.com/axvspan-and-axhspan/
-    # 後ろは次の期間を指定する
-    # 緊急事態宣言
-    plt.axvspan('2021/1/6~2021/1/12', '2021/2/17~2021/2/23', color="orange", alpha=0.3)
-    plt.axvspan('2021/4/21~2021/4/27', '2021/6/23~2021/6/29', color="orange", alpha=0.3)
-    plt.axvspan('2021/8/4~2021/8/10', '2021/10/6~2021/10/12', color="orange", alpha=0.3)
-    # まん防
-    plt.axvspan('2021/4/7~2021/4/13', '2021/4/21~2021/4/27', color="yellow", alpha=0.3)
-    plt.axvspan('2021/6/23~2021/6/29', '2021/8/4~2021/8/10', color="yellow", alpha=0.3)
-    plt.axvspan('2022/1/26~2022/2/1', '2022/2/23~2022/3/1', color="yellow", alpha=0.3)
+    for term in emergency_term:  # 緊急事態宣言
+        plt.axvspan(term[0], term[1], color="orange", alpha=0.3)
+    for term in semi_emergency_term:  # まん延防止等重点措置
+        plt.axvspan(term[0], term[1], color="yellow", alpha=0.3)
 
-    # Y軸
+    # Y軸 主目盛
     plt.ylabel('infected persons per population(%)')
     plt.ylim(0, 2)
+    plt.gca().yaxis.set_major_locator(ticker.MultipleLocator(0.5))
+    plt.gca().tick_params(which='major', axis='y', length=6)
     plt.grid(which='major', axis='y')
+    # Y軸 補助目盛
+    plt.gca().yaxis.set_minor_locator(ticker.MultipleLocator(0.1))
+    plt.gca().tick_params(which='minor', axis='y', direction='in')
+    plt.grid(which='minor', axis='y', linestyle='dotted')
 
-    # X軸
-    plt.xlabel('week')
-    plt.xticks(rotation=90)
+    # X軸 主目盛
+    plt.xticks(rotation=45)
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y/%m/%d'))
+    plt.gca().tick_params(which='major', axis='x', length=6)
+    plt.grid(which='major', axis='x')
+    # X軸 補助目盛
+    plt.gca().xaxis.set_minor_locator(mdates.MonthLocator())
+    plt.gca().tick_params(which='minor', axis='x', direction='in')
+    plt.grid(which='minor', axis='x', linestyle='dotted')
 
     plt.tight_layout()
     plt.savefig(f"output/{prefectures}_{gender}.png")
