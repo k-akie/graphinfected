@@ -1,12 +1,31 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from datetime import datetime as dt
+
+
+def _search_month(target_month, exists_month):
+    if target_month in exists_month:
+        return target_month
+
+    # 対象月が存在するデータ範囲より前なら、もっとも古い日付のデータを使う
+    date_format = '%Y/%m/%d'
+    target_date = dt.strptime(target_month, date_format)
+    start_date = dt.strptime(exists_month[0], date_format)
+    if target_date < start_date:
+        return exists_month[0]
+
+    # 対象月が存在するデータ範囲より前なら、もっとも新しい日付のデータを使う
+    return exists_month[len(exists_month)-1]
 
 
 def data_merge(target_columns, df_population, df_infected):
     df_result = pd.DataFrame()
     for index, infectedRow in df_infected.iterrows():
         infected_series = infectedRow.loc[target_columns]
-        population_series = df_population.loc[infectedRow['month']]
+
+        month = _search_month(infectedRow['month'], df_population.index)
+        population_series = df_population.loc[month]
+
         df_result[infectedRow['week']] = infected_series * 100 / population_series
 
     return df_result.T
