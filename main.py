@@ -1,3 +1,4 @@
+from make_output_row import make_output_row
 from read_infected import read_infected
 from read_population_osaka_fu import read_population_osaka_fu
 from make_output_ratio import make_output_ratio, _calc_ratio
@@ -12,7 +13,10 @@ if __name__ == '__main__':
     # 感染者数データ
     infected = read_infected('input/newly_confirmed_cases_detail_weekly.csv', 'UTF-8')
 
-    # 出力
+    # 出力(割合)
     make_output_ratio(_period_array, population, infected, 'osaka', 'male')
     make_output_ratio(_period_array, population, infected, 'osaka', 'female')
     make_output_ratio(_period_array, population, infected, 'osaka', 'all')
+
+    # 出力(生値)
+    make_output_row(_period_array, population, infected, 'osaka', 'male')
