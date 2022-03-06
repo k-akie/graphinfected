@@ -25,11 +25,15 @@ def read_infected(file_path, encode):
     male = osaka_fu.filter(like='Male ') \
         .rename(columns=lambda s: s.removeprefix('Male ')) \
         .rename(columns=lambda s: s.removesuffix('.27')) \
-        .reset_index().join([df_month]).set_index('Week')
+        # .reset_index().join([df_month]).set_index('Week')
 
     female = osaka_fu.filter(like='Female ') \
         .rename(columns=lambda s: s.removeprefix('Female ')) \
         .rename(columns=lambda s: s.removesuffix('.27')) \
-        .reset_index().join([df_month]).set_index('Week')
+        # .reset_index().join([df_month]).set_index('Week')
 
-    return {'male': male, 'female': female}
+    result_all = (male + female).reset_index().join([df_month]).set_index('Week')
+    result_male = male.reset_index().join([df_month]).set_index('Week')
+    result_female = female.reset_index().join([df_month]).set_index('Week')
+
+    return {'male': result_male, 'female': result_female, 'all': result_all}

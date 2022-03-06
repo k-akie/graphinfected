@@ -35,4 +35,4 @@ def read_population_osaka_fu(period_array, file_path, encode):
     male = joined_population(period_array, osaka_fu_male)
     female = joined_population(period_array, osaka_fu_female)
 
-    return {'male': male, 'female': female}
+    return {'male': male, 'female': female, 'all': male + female}

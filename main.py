@@ -19,3 +19,5 @@ if __name__ == '__main__':
     result_male = data_merge(_period_array, population.get('female'), infected.get('female'))
     make_output(result_male, 'osaka', 'female')
 
+    result_male = data_merge(_period_array, population.get('all'), infected.get('all'))
+    make_output(result_male, 'osaka', 'all')
