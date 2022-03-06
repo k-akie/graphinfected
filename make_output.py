@@ -36,30 +36,28 @@ def data_merge(target_columns, df_population, df_infected):
 # 緊急事態宣言等の履歴
 # https://www.kwm.co.jp/blog/state-of-emergency/
 emergency_term = [  # 緊急事態宣言
-    [dt.fromisoformat('2020-04-07'), dt.fromisoformat('2020-05-21')],  # 1回目
-    [dt.fromisoformat('2021-01-14'), dt.fromisoformat('2021-02-28')],  # 2回目
-    [dt.fromisoformat('2021-04-25'), dt.fromisoformat('2021-06-20')],  # 3回目、2回目のまん防に変わった
-    [dt.fromisoformat('2021-08-02'), dt.fromisoformat('2021-09-30')],  # 4回目
+    [dt.fromisoformat('2020-04-07'), dt.fromisoformat('2020-05-21'), 'emergency'],  # 1回目
+    [dt.fromisoformat('2021-01-14'), dt.fromisoformat('2021-02-28'), None],  # 2回目
+    [dt.fromisoformat('2021-04-25'), dt.fromisoformat('2021-06-20'), None],  # 3回目、2回目のまん防に変わった
+    [dt.fromisoformat('2021-08-02'), dt.fromisoformat('2021-09-30'), None],  # 4回目
 ]
 semi_emergency_term = [  # まん延防止等重点措置
-    [dt.fromisoformat('2021-04-05'), dt.fromisoformat('2021-04-24')],  # 1回目、3回目の緊急事態宣言に変わった
-    [dt.fromisoformat('2021-06-21'), dt.fromisoformat('2021-08-01')],  # 2回目、4回目の緊急事態宣言に変わった
-    [dt.fromisoformat('2022-01-27'), dt.fromisoformat('2022-03-21')],  # 3回目、延長中
+    [dt.fromisoformat('2021-04-05'), dt.fromisoformat('2021-04-24'), 'semi emergency'],  # 1回目、3回目の緊急事態宣言に変わった
+    [dt.fromisoformat('2021-06-21'), dt.fromisoformat('2021-08-01'), None],  # 2回目、4回目の緊急事態宣言に変わった
+    [dt.fromisoformat('2022-01-27'), dt.fromisoformat('2022-03-21'), None],  # 3回目、延長中
 ]
 
 
-def make_graph(df_result, prefectures, gender):
+def _make_graph(df_result, prefectures, gender):
     # グラフ全体の設定
     plt.figure(figsize=(10.0, 8.0))  # 横、縦
-    plt.plot(df_result)
-    plt.legend(df_result.columns, loc='upper left')
-    plt.title(f"{prefectures} [{gender}]", fontsize=14)
+    plt.plot(df_result, label=df_result.columns)
 
     # 背景 https://bunsekikobako.com/axvspan-and-axhspan/
     for term in emergency_term:  # 緊急事態宣言
-        plt.axvspan(term[0], term[1], color="orange", alpha=0.3)
+        plt.axvspan(term[0], term[1], color="orange", alpha=0.3, label=term[2])
     for term in semi_emergency_term:  # まん延防止等重点措置
-        plt.axvspan(term[0], term[1], color="yellow", alpha=0.3)
+        plt.axvspan(term[0], term[1], color="yellow", alpha=0.3, label=term[2])
 
     # Y軸 主目盛
     plt.ylabel('infected persons per population(%)')
@@ -82,6 +80,16 @@ def make_graph(df_result, prefectures, gender):
     plt.gca().tick_params(which='minor', axis='x', direction='in')
     plt.grid(which='minor', axis='x', linestyle='dotted')
 
+    # 全体設定
+    plt.legend(loc='upper left')
+    plt.title(f"{prefectures} [{gender}]", fontsize=14)
     plt.tight_layout()
     plt.savefig(f"output/{prefectures}_{gender}.png")
     plt.close('all')
+
+
+def make_output(df_result, prefectures, gender):
+    _make_graph(df_result, prefectures, gender)
+
+    # ファイルでも保存
+    df_result.to_csv(f'output/{prefectures}_{gender}.csv')

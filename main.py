@@ -1,6 +1,6 @@
 from read_infected import read_infected
 from read_population_osaka_fu import read_population_osaka_fu
-from make_output import make_graph, data_merge
+from make_output import make_output, data_merge
 
 if __name__ == '__main__':
     # 年代
@@ -14,8 +14,8 @@ if __name__ == '__main__':
 
     # 結合＆グラフ作る
     result_female = data_merge(_period_array, population.get('male'), infected.get('male'))
-    make_graph(result_female, 'osaka', 'male')
+    make_output(result_female, 'osaka', 'male')
 
     result_male = data_merge(_period_array, population.get('female'), infected.get('female'))
-    make_graph(result_male, 'osaka', 'female')
+    make_output(result_male, 'osaka', 'female')
 
