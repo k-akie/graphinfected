@@ -41,4 +41,4 @@ if __name__ == '__main__':
         df_data = pd.concat([df_data, _read_file(key, file_map[key])])
     df_data.sort_values('month', inplace=True)
 
-    df_data.to_csv('input/jinkou-xlslist.csv')
+    df_data.to_csv('input/jinkou-xlslist.csv', line_terminator="\n")

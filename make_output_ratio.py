@@ -83,4 +83,4 @@ def make_output_ratio(target_columns: list[str], population: dict[str, DataFrame
 
     # 出力
     _make_graph_ratio(df_result, prefectures, target)
-    df_result.to_csv(f'output/ratio_{prefectures}_{target}.csv')
+    df_result.to_csv(f'output/ratio_{prefectures}_{target}.csv', line_terminator="\n")

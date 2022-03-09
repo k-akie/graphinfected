@@ -65,4 +65,4 @@ def make_output_row(target_columns: list[str], population: dict[str, DataFrame],
 
     # 出力
     _make_graph_row(df_population, df_infected[target_columns], prefectures, target)
-    df_population.to_csv(f'output/row_{prefectures}_{target}.csv')
+    df_population.to_csv(f'output/row_{prefectures}_{target}.csv', line_terminator="\n")
