@@ -1,3 +1,4 @@
+import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -55,6 +56,7 @@ def _make_graph_ratio(df_result, prefectures, target):
     plt.grid(which='minor', axis='y', linestyle='dotted')
 
     # X軸 主目盛
+    plt.xlim(datetime.date(2020, 3, 1), datetime.date(2022, 5, 1))
     plt.xticks(rotation=45)
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y/%m/%d'))
     plt.gca().tick_params(which='major', axis='x', length=6)

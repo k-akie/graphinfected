@@ -1,7 +1,7 @@
 from make_output_row import make_output_row
 from read_infected import read_infected
 from read_population_osaka_fu import read_population_osaka_fu
-from make_output_ratio import make_output_ratio, _calc_ratio
+from make_output_ratio import make_output_ratio
 
 if __name__ == '__main__':
     # 年代
