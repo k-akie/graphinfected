@@ -1,4 +1,5 @@
 import datetime
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -45,7 +46,7 @@ def _make_graph_ratio(df_result, prefectures, target):
         plt.axvspan(term[0], term[1], color="yellow", alpha=0.3, label=term[2])
 
     # Y軸 主目盛
-    plt.ylabel('infected persons per population(%)')
+    plt.ylabel('人口当たり感染者割合(%)')
     plt.ylim(0, 2)
     plt.gca().yaxis.set_major_locator(ticker.MultipleLocator(0.5))
     plt.gca().tick_params(which='major', axis='y', length=6)

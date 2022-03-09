@@ -18,7 +18,7 @@ def _make_graph_row(df_population, df_infected, prefectures, target):
         plt.axvspan(term[0], term[1], color="yellow", alpha=0.3, label=term[2])
 
     # 左Y軸 主目盛
-    plt.ylabel('infected')
+    plt.ylabel('感染者数')
     plt.ylim(0, 10000)
     plt.gca().yaxis.set_major_locator(ticker.MultipleLocator(2500))
     plt.gca().tick_params(which='major', axis='y', length=6)
@@ -45,7 +45,7 @@ def _make_graph_row(df_population, df_infected, prefectures, target):
     ax2.plot(df_population, label=df_population.columns, linestyle='dashdot', linewidth =0.8)
     ax2.set_ylim(0, 1000000)
     ax2.yaxis.set_major_locator(ticker.MultipleLocator(250000))
-    ax2.set_ylabel('population')
+    ax2.set_ylabel('人口')
 
     # 全体設定
     plt.title(f"{prefectures} [{target}]", fontsize=14)
