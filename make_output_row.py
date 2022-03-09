@@ -5,10 +5,12 @@ import matplotlib.ticker as ticker
 from pandas import DataFrame
 
 from graph_option import emergency_term, semi_emergency_term
+from type.AggregationUnit import AggregationUnit
 from type.Prefecture import Prefecture
 
 
-def _make_graph_row(df_population, df_infected, prefecture: Prefecture, target):
+def _make_graph_row(df_population: DataFrame, df_infected: DataFrame
+                    , prefecture: Prefecture, target: AggregationUnit):
     # グラフ全体の設定
     plt.figure(figsize=(10.0, 8.0))  # 横、縦
     plt.plot(df_infected, label=df_infected.columns)
@@ -50,20 +52,20 @@ def _make_graph_row(df_population, df_infected, prefecture: Prefecture, target):
     ax2.set_ylabel('人口')
 
     # 全体設定
-    plt.title(f"{prefecture.name} [{target}]", fontsize=14)
+    plt.title(f"{prefecture.name} [{target.value.name}]", fontsize=14)
     plt.tight_layout()
-    plt.savefig(f"output/row_{prefecture.key}_{target}.png")
+    plt.savefig(f"output/row_{prefecture.key}_{target.value.key}.png")
     plt.close('all')
 
 
 def make_output_row(target_columns: list[str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
-                    , prefecture: Prefecture, target: str):
-    df_population = population.get(target)
+                    , prefecture: Prefecture, target: AggregationUnit):
+    df_population = population.get(target.value.key)
 
-    df_infected = infected.get(target)
+    df_infected = infected.get(target.value.key)
     df_infected.reset_index(inplace=True)
     df_infected.set_index('week_start', inplace=True)
 
     # 出力
     _make_graph_row(df_population, df_infected[target_columns], prefecture, target)
-    df_population.to_csv(f'output/row_{prefecture.key}_{target}.csv', line_terminator="\n")
+    df_population.to_csv(f'output/row_{prefecture.key}_{target.value.key}.csv', line_terminator="\n")
