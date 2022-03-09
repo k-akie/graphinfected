@@ -4,11 +4,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.ticker as ticker
+from pandas import DataFrame, DatetimeIndex
 
 from graph_option import emergency_term, semi_emergency_term
 
 
-def _search_month(target_month, exists_month):
+def _search_month(target_month: datetime, exists_month: DatetimeIndex):
     if target_month in exists_month:
         return target_month
 
@@ -21,7 +22,7 @@ def _search_month(target_month, exists_month):
     return exists_month[len(exists_month)-1]
 
 
-def _calc_ratio(target_columns, df_population, df_infected):
+def _calc_ratio(target_columns: list[str], df_population: DataFrame, df_infected: DataFrame) -> DataFrame:
     df_result = pd.DataFrame()
     for index, infectedRow in df_infected.iterrows():
         infected_series = infectedRow.loc[target_columns]
@@ -34,7 +35,7 @@ def _calc_ratio(target_columns, df_population, df_infected):
     return df_result.T
 
 
-def _make_graph_ratio(df_result, prefectures, target):
+def _make_graph_ratio(df_result: DataFrame, prefectures: str, target: str):
     # グラフ全体の設定
     plt.figure(figsize=(10.0, 8.0))  # 横、縦
     plt.plot(df_result, label=df_result.columns)
@@ -75,7 +76,8 @@ def _make_graph_ratio(df_result, prefectures, target):
     plt.close('all')
 
 
-def make_output_ratio(target_columns, population, infected, prefectures, target):
+def make_output_ratio(target_columns: list[str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
+                      , prefectures: str, target: str):
     # 出力用にデータを加工
     df_result = _calc_ratio(target_columns, population.get(target), infected.get(target))
 

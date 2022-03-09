@@ -2,6 +2,7 @@ import datetime
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.ticker as ticker
+from pandas import DataFrame
 
 from graph_option import emergency_term, semi_emergency_term
 
@@ -54,7 +55,8 @@ def _make_graph_row(df_population, df_infected, prefectures, target):
     plt.close('all')
 
 
-def make_output_row(target_columns, population, infected, prefectures, target):
+def make_output_row(target_columns: list[str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
+                    , prefectures: str, target: str):
     df_population = population.get(target)
 
     df_infected = infected.get(target)
