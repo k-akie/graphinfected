@@ -24,10 +24,7 @@ def _search_file_list(dir_path):
     for file in files:
         target = repeater.search(file).group(0) + '01'
         target_datetime = datetime.datetime.strptime(target, '%Y%m%d')
-        year_str = target_datetime.strftime('%Y')
-        month_str = target_datetime.strftime('%m').lstrip("0")
-        day_str = target_datetime.strftime('%d').lstrip("0")
-        result[(year_str + '/' + month_str + '/' + day_str)] = file
+        result[target_datetime] = file
 
     return result
 
@@ -40,5 +37,6 @@ if __name__ == '__main__':
     df_data = pd.DataFrame()
     for key in sorted(file_map.keys()):
         df_data = pd.concat([df_data, _read_file(key, file_map[key])])
+    df_data.sort_values('month', inplace=True)
 
     df_data.to_csv('input/jinkou-xlslist.csv')

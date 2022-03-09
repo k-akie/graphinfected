@@ -15,21 +15,24 @@ def read_infected(file_path, encode):
     osaka_fu = osaka_fu.replace(['*'], 0).astype(int)
 
     # 行ごとの月情報
-    date_format = '%Y/%m/%d'
     df_month = pd.DataFrame({
-        'week_start': [dt.strptime(week.split('~')[0], date_format) for week in osaka_fu.index],
-        'month': osaka_fu.index.str.split("\~").str[0].str.replace(r'/[0-9]+$', '/1', regex=True)
+        'week_start': [dt.strptime(week.split('~')[0], '%Y/%m/%d') for week in osaka_fu.index],
+        'month': [dt.strptime(week.split('~')[0], '%Y/%m/%d').replace(day=1) for week in osaka_fu.index]
     })
 
     # https://note.nkmk.me/python-pandas-dataframe-rename/
     male = osaka_fu.filter(like='Male ') \
         .rename(columns=lambda s: s.removeprefix('Male ')) \
         .rename(columns=lambda s: s.removesuffix('.27')) \
-        .reset_index().join([df_month]).set_index('Week')
+        # .reset_index().join([df_month]).set_index('Week')
 
     female = osaka_fu.filter(like='Female ') \
         .rename(columns=lambda s: s.removeprefix('Female ')) \
         .rename(columns=lambda s: s.removesuffix('.27')) \
-        .reset_index().join([df_month]).set_index('Week')
+        # .reset_index().join([df_month]).set_index('Week')
 
-    return {'male': male, 'female': female}
+    result_all = (male + female).reset_index().join([df_month]).set_index('Week')
+    result_male = male.reset_index().join([df_month]).set_index('Week')
+    result_female = female.reset_index().join([df_month]).set_index('Week')
+
+    return {'male': result_male, 'female': result_female, 'all': result_all}
