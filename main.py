@@ -4,8 +4,11 @@ from make_output_row import make_output_row
 from read_infected import read_infected
 from read_population_osaka_fu import read_population_osaka_fu
 from make_output_ratio import make_output_ratio
+from type.Prefecture import Prefecture
 
 if __name__ == '__main__':
+    osaka = Prefecture('osaka', '大阪')
+
     # 年代
     _period_array = ['Under 10', '10s', '20s', '30s', '40s', '50s', '60s', '70s', '80s', 'Over 90']
 
@@ -19,9 +22,9 @@ if __name__ == '__main__':
     matplotlib.rc('font', family='BIZ UDGothic')
 
     # 出力(割合)
-    make_output_ratio(_period_array, population, infected, 'osaka', 'male')
-    make_output_ratio(_period_array, population, infected, 'osaka', 'female')
-    make_output_ratio(_period_array, population, infected, 'osaka', 'all')
+    make_output_ratio(_period_array, population, infected, osaka, 'male')
+    make_output_ratio(_period_array, population, infected, osaka, 'female')
+    make_output_ratio(_period_array, population, infected, osaka, 'all')
 
     # 出力(生値)
-    make_output_row(_period_array, population, infected, 'osaka', 'male')
+    make_output_row(_period_array, population, infected, osaka, 'male')

@@ -7,6 +7,7 @@ import matplotlib.ticker as ticker
 from pandas import DataFrame, DatetimeIndex
 
 from graph_option import emergency_term, semi_emergency_term
+from type.Prefecture import Prefecture
 
 
 def _search_month(target_month: datetime, exists_month: DatetimeIndex):
@@ -35,7 +36,7 @@ def _calc_ratio(target_columns: list[str], df_population: DataFrame, df_infected
     return df_result.T
 
 
-def _make_graph_ratio(df_result: DataFrame, prefectures: str, target: str):
+def _make_graph_ratio(df_result: DataFrame, prefecture: Prefecture, target: str):
     # グラフ全体の設定
     plt.figure(figsize=(10.0, 8.0))  # 横、縦
     plt.plot(df_result, label=df_result.columns)
@@ -70,17 +71,17 @@ def _make_graph_ratio(df_result: DataFrame, prefectures: str, target: str):
 
     # 全体設定
     plt.legend(loc='upper left')
-    plt.title(f"{prefectures} [{target}]", fontsize=14)
+    plt.title(f"{prefecture.name} [{target}]", fontsize=14)
     plt.tight_layout()
-    plt.savefig(f"output/ratio_{prefectures}_{target}.png")
+    plt.savefig(f"output/ratio_{prefecture.key}_{target}.png")
     plt.close('all')
 
 
 def make_output_ratio(target_columns: list[str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
-                      , prefectures: str, target: str):
+                      , prefecture: Prefecture, target: str):
     # 出力用にデータを加工
     df_result = _calc_ratio(target_columns, population.get(target), infected.get(target))
 
     # 出力
-    _make_graph_ratio(df_result, prefectures, target)
-    df_result.to_csv(f'output/ratio_{prefectures}_{target}.csv', line_terminator="\n")
+    _make_graph_ratio(df_result, prefecture, target)
+    df_result.to_csv(f'output/ratio_{prefecture.key}_{target}.csv', line_terminator="\n")
