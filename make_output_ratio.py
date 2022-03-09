@@ -2,7 +2,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.ticker as ticker
-from datetime import datetime as dt
 
 from graph_option import emergency_term, semi_emergency_term
 
@@ -12,9 +11,9 @@ def _search_month(target_month, exists_month):
         return target_month
 
     # 対象月が存在するデータ範囲より前なら、もっとも古い日付のデータを使う
-    start_date = dt.strptime(exists_month[0], '%Y-%m-%d')
+    start_date = exists_month[0]
     if target_month < start_date:
-        return exists_month[0]
+        return start_date
 
     # 対象月が存在するデータ範囲より前なら、もっとも新しい日付のデータを使う
     return exists_month[len(exists_month)-1]

@@ -17,6 +17,9 @@ def joined_population(period_array, df_input):
                         ['80～84歳', '85～89歳'],
                         ['90～94歳', '95歳以上']]
 
+    # 元データのインデックスを日付扱いする
+    df_input.index = pd.to_datetime(df_input.index)
+
     # 行ごとの月情報
     df_results = pd.DataFrame()
     for period, columnNames in zip(period_array, columnNamesArray):
