@@ -17,9 +17,9 @@ def _make_graph_row(df_population: DataFrame, df_infected: DataFrame
 
     # 背景 https://bunsekikobako.com/axvspan-and-axhspan/
     for term in emergency_term:  # 緊急事態宣言
-        plt.axvspan(term[0], term[1], color="orange", alpha=0.3, label=term[2])
+        plt.axvspan(term.start, term.end, color="orange", alpha=0.3, label=term.name)
     for term in semi_emergency_term:  # まん延防止等重点措置
-        plt.axvspan(term[0], term[1], color="yellow", alpha=0.3, label=term[2])
+        plt.axvspan(term.start, term.end, color="yellow", alpha=0.3, label=term.name)
 
     # 左Y軸 主目盛
     plt.ylabel('感染者数')
