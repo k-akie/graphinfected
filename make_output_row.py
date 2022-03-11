@@ -46,7 +46,7 @@ def _make_graph_row(df_population: DataFrame, df_infected: DataFrame
 
     # 右Y軸 主目盛
     ax2 = plt.twinx()
-    ax2.plot(df_population, label=df_population.columns, linestyle='dashdot', linewidth =0.8)
+    ax2.plot(df_population, label=df_population.columns, linestyle='dashdot', linewidth=0.8)
     ax2.set_ylim(0, 1000000)
     ax2.yaxis.set_major_locator(ticker.MultipleLocator(250000))
     ax2.set_ylabel('人口')
@@ -58,14 +58,16 @@ def _make_graph_row(df_population: DataFrame, df_infected: DataFrame
     plt.close('all')
 
 
-def make_output_row(target_columns: list[str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
+def make_output_row(target_columns: dict[str, str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
                     , prefecture: Prefecture, target: AggregationUnit):
     df_population = population.get(target.value.key)
 
     df_infected = infected.get(target.value.key)
-    df_infected.reset_index(inplace=True)
-    df_infected.set_index('week_start', inplace=True)
+    df_infected_graph = df_infected.reset_index()\
+        .set_index('week_start')\
+        .rename(columns=target_columns)[list(target_columns.values())]
 
     # 出力
-    _make_graph_row(df_population, df_infected[target_columns], prefecture, target)
-    df_population.to_csv(f'output/row_{prefecture.key}_{target.value.key}.csv', line_terminator="\n")
+    _make_graph_row(df_population, df_infected_graph, prefecture, target)
+    df_population.to_csv(f'output/row_{prefecture.key}_{target.value.key}_population.csv', line_terminator="\n")
+    df_infected[list(target_columns.keys())].to_csv(f'output/row_{prefecture.key}_{target.value.key}_infected.csv', line_terminator="\n")

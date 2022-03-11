@@ -4,14 +4,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.ticker as ticker
-from pandas import DataFrame, DatetimeIndex
+from pandas import DataFrame, Index
 
 from graph_option import emergency_term, semi_emergency_term
 from type.AggregationUnit import AggregationUnit
 from type.Prefecture import Prefecture
 
 
-def _search_month(target_month: datetime, exists_month: DatetimeIndex):
+def _search_month(target_month: datetime, exists_month: Index):
     if target_month in exists_month:
         return target_month
 
@@ -78,10 +78,10 @@ def _make_graph_ratio(df_result: DataFrame, prefecture: Prefecture, target: Aggr
     plt.close('all')
 
 
-def make_output_ratio(target_columns: list[str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
+def make_output_ratio(target_columns: dict[str, str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
                       , prefecture: Prefecture, target: AggregationUnit):
     # 出力用にデータを加工
-    df_result = _calc_ratio(target_columns, population.get(target.value.key), infected.get(target.value.key))
+    df_result = _calc_ratio(list(target_columns.keys()), population.get(target.value.key), infected.get(target.value.key))
 
     # 出力
     _make_graph_ratio(df_result, prefecture, target)
