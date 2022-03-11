@@ -4,21 +4,21 @@ import matplotlib.dates as mdates
 import matplotlib.ticker as ticker
 from pandas import DataFrame
 
-from graph_option import emergency_term, semi_emergency_term
-from type.AggregationUnit import AggregationUnit
+from type.Term import EMERGENCY_TERM, SEMI_EMERGENCY_TERM
+from type.Grouping import Grouping
 from type.Prefecture import Prefecture
 
 
 def _make_graph_row(df_population: DataFrame, df_infected: DataFrame
-                    , prefecture: Prefecture, target: AggregationUnit):
+                    , prefecture: Prefecture, target: Grouping):
     # グラフ全体の設定
     plt.figure(figsize=(10.0, 8.0))  # 横、縦
     plt.plot(df_infected, label=df_infected.columns)
 
     # 背景 https://bunsekikobako.com/axvspan-and-axhspan/
-    for term in emergency_term:  # 緊急事態宣言
+    for term in EMERGENCY_TERM:  # 緊急事態宣言
         plt.axvspan(term.start, term.end, color="orange", alpha=0.3, label=term.name)
-    for term in semi_emergency_term:  # まん延防止等重点措置
+    for term in SEMI_EMERGENCY_TERM:  # まん延防止等重点措置
         plt.axvspan(term.start, term.end, color="yellow", alpha=0.3, label=term.name)
 
     # 左Y軸 主目盛
@@ -59,7 +59,7 @@ def _make_graph_row(df_population: DataFrame, df_infected: DataFrame
 
 
 def make_output_row(target_columns: dict[str, str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
-                    , prefecture: Prefecture, target: AggregationUnit):
+                    , prefecture: Prefecture, target: Grouping):
     df_population = population.get(target.value.key)
 
     df_infected = infected.get(target.value.key)
@@ -69,5 +69,7 @@ def make_output_row(target_columns: dict[str, str], population: dict[str, DataFr
 
     # 出力
     _make_graph_row(df_population, df_infected_graph, prefecture, target)
-    df_population.to_csv(f'output/row_{prefecture.key}_{target.value.key}_population.csv', line_terminator="\n")
-    df_infected[list(target_columns.keys())].to_csv(f'output/row_{prefecture.key}_{target.value.key}_infected.csv', line_terminator="\n")
+    df_population\
+        .to_csv(f'output/row_{prefecture.key}_{target.value.key}_population.csv', line_terminator="\n")
+    df_infected[list(target_columns.keys())]\
+        .to_csv(f'output/row_{prefecture.key}_{target.value.key}_infected.csv', line_terminator="\n")

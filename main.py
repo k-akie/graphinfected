@@ -4,7 +4,7 @@ from make_output_row import make_output_row
 from read_infected import read_infected
 from read_population_osaka_fu import read_population_osaka_fu
 from make_output_ratio import make_output_ratio
-from type.AggregationUnit import AggregationUnit
+from type.Grouping import Grouping
 from type.Generation import generation_dict
 from type.Prefecture import Prefecture
 
@@ -20,9 +20,9 @@ if __name__ == '__main__':
     matplotlib.rc('font', family='BIZ UDGothic')
 
     # 出力(割合)
-    make_output_ratio(generation_dict, population, infected, osaka, AggregationUnit.MALE)
-    make_output_ratio(generation_dict, population, infected, osaka, AggregationUnit.FEMALE)
-    make_output_ratio(generation_dict, population, infected, osaka, AggregationUnit.ALL)
+    make_output_ratio(generation_dict, population, infected, osaka, Grouping.MALE)
+    make_output_ratio(generation_dict, population, infected, osaka, Grouping.FEMALE)
+    make_output_ratio(generation_dict, population, infected, osaka, Grouping.ALL)
 
     # 出力(生値)
-    make_output_row(generation_dict, population, infected, osaka, AggregationUnit.MALE)
+    make_output_row(generation_dict, population, infected, osaka, Grouping.MALE)

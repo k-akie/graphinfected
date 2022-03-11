@@ -6,8 +6,8 @@ import matplotlib.dates as mdates
 import matplotlib.ticker as ticker
 from pandas import DataFrame, Index
 
-from graph_option import emergency_term, semi_emergency_term
-from type.AggregationUnit import AggregationUnit
+from type.Term import EMERGENCY_TERM, SEMI_EMERGENCY_TERM
+from type.Grouping import Grouping
 from type.Prefecture import Prefecture
 
 
@@ -37,15 +37,15 @@ def _calc_ratio(target_columns: list[str], df_population: DataFrame, df_infected
     return df_result.T
 
 
-def _make_graph_ratio(df_result: DataFrame, prefecture: Prefecture, target: AggregationUnit):
+def _make_graph_ratio(df_result: DataFrame, prefecture: Prefecture, target: Grouping):
     # グラフ全体の設定
     plt.figure(figsize=(10.0, 8.0))  # 横、縦
     plt.plot(df_result, label=df_result.columns)
 
     # 背景 https://bunsekikobako.com/axvspan-and-axhspan/
-    for term in emergency_term:  # 緊急事態宣言
+    for term in EMERGENCY_TERM:  # 緊急事態宣言
         plt.axvspan(term.start, term.end, color="orange", alpha=0.3, label=term.name)
-    for term in semi_emergency_term:  # まん延防止等重点措置
+    for term in SEMI_EMERGENCY_TERM:  # まん延防止等重点措置
         plt.axvspan(term.start, term.end, color="yellow", alpha=0.3, label=term.name)
 
     # Y軸 主目盛
@@ -79,7 +79,7 @@ def _make_graph_ratio(df_result: DataFrame, prefecture: Prefecture, target: Aggr
 
 
 def make_output_ratio(target_columns: dict[str, str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
-                      , prefecture: Prefecture, target: AggregationUnit):
+                      , prefecture: Prefecture, target: Grouping):
     # 出力用にデータを加工
     df_result = _calc_ratio(list(target_columns.keys()), population.get(target.value.key), infected.get(target.value.key))
 
