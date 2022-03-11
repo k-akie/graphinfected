@@ -83,6 +83,9 @@ def make_output_ratio(target_columns: dict[str, str], population: dict[str, Data
     # 出力用にデータを加工
     df_result = _calc_ratio(list(target_columns.keys()), population.get(target.value.key), infected.get(target.value.key))
 
-    # 出力
-    _make_graph_ratio(df_result, prefecture, target)
+    # CSV出力
     df_result.to_csv(f'output/ratio_{prefecture.key}_{target.value.key}.csv', line_terminator="\n")
+
+    # グラフ出力
+    df_result_graph = df_result.rename(columns=target_columns)
+    _make_graph_ratio(df_result_graph, prefecture, target)

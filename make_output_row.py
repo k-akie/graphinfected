@@ -23,12 +23,12 @@ def _make_graph_row(df_population: DataFrame, df_infected: DataFrame
 
     # 左Y軸 主目盛
     plt.ylabel('感染者数')
-    plt.ylim(0, 10000)
-    plt.gca().yaxis.set_major_locator(ticker.MultipleLocator(2500))
+    plt.ylim(0, 15000)
+    plt.gca().yaxis.set_major_locator(ticker.MultipleLocator(5000))
     plt.gca().tick_params(which='major', axis='y', length=6)
     plt.grid(which='major', axis='y')
     # 左Y軸 補助目盛
-    plt.gca().yaxis.set_minor_locator(ticker.MultipleLocator(500))
+    plt.gca().yaxis.set_minor_locator(ticker.MultipleLocator(1000))
     plt.gca().tick_params(which='minor', axis='y', direction='in')
     plt.grid(which='minor', axis='y', linestyle='dotted')
     plt.legend(loc='upper left')
@@ -47,8 +47,8 @@ def _make_graph_row(df_population: DataFrame, df_infected: DataFrame
     # 右Y軸 主目盛
     ax2 = plt.twinx()
     ax2.plot(df_population, label=df_population.columns, linestyle='dashdot', linewidth=0.8)
-    ax2.set_ylim(0, 1000000)
-    ax2.yaxis.set_major_locator(ticker.MultipleLocator(250000))
+    ax2.set_ylim(0, 1500000)
+    ax2.yaxis.set_major_locator(ticker.MultipleLocator(500000))
     ax2.set_ylabel('人口')
 
     # 全体設定
@@ -61,15 +61,16 @@ def _make_graph_row(df_population: DataFrame, df_infected: DataFrame
 def make_output_row(target_columns: dict[str, str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
                     , prefecture: Prefecture, target: Grouping):
     df_population = population.get(target.value.key)
-
     df_infected = infected.get(target.value.key)
-    df_infected_graph = df_infected.reset_index()\
-        .set_index('week_start')\
-        .rename(columns=target_columns)[list(target_columns.values())]
 
-    # 出力
-    _make_graph_row(df_population, df_infected_graph, prefecture, target)
+    # CSV出力
     df_population\
         .to_csv(f'output/row_{prefecture.key}_{target.value.key}_population.csv', line_terminator="\n")
     df_infected[list(target_columns.keys())]\
         .to_csv(f'output/row_{prefecture.key}_{target.value.key}_infected.csv', line_terminator="\n")
+
+    # グラフ出力
+    df_infected_graph = df_infected.reset_index()\
+        .set_index('week_start')\
+        .rename(columns=target_columns)[list(target_columns.values())]
+    _make_graph_row(df_population, df_infected_graph, prefecture, target)

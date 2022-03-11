@@ -26,3 +26,5 @@ if __name__ == '__main__':
 
     # 出力(生値)
     make_output_row(generation_dict, population, infected, osaka, Grouping.MALE)
+    make_output_row(generation_dict, population, infected, osaka, Grouping.FEMALE)
+    make_output_row(generation_dict, population, infected, osaka, Grouping.ALL)
