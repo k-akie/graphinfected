@@ -6,7 +6,7 @@ from datetime import datetime as dt
 # https://covid19.mhlw.go.jp/extensions/public/index.html
 
 
-def read_infected(file_path, encode):
+def read_infected(file_path: str, encode: str):
     # 27 大阪府
     csv_input = pd.read_csv(filepath_or_buffer=file_path, encoding=encode, sep=",", header=1, index_col=0)
     osaka_fu = csv_input.filter(like='.27', axis='columns')

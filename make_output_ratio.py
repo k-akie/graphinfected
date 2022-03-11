@@ -4,11 +4,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.ticker as ticker
+from pandas import DataFrame, Index
 
-from graph_option import emergency_term, semi_emergency_term
+from type.Term import EMERGENCY_TERM, SEMI_EMERGENCY_TERM
+from type.Grouping import Grouping
+from type.Prefecture import Prefecture
 
 
-def _search_month(target_month, exists_month):
+def _search_month(target_month: datetime, exists_month: Index):
     if target_month in exists_month:
         return target_month
 
@@ -21,7 +24,7 @@ def _search_month(target_month, exists_month):
     return exists_month[len(exists_month)-1]
 
 
-def _calc_ratio(target_columns, df_population, df_infected):
+def _calc_ratio(target_columns: list[str], df_population: DataFrame, df_infected: DataFrame) -> DataFrame:
     df_result = pd.DataFrame()
     for index, infectedRow in df_infected.iterrows():
         infected_series = infectedRow.loc[target_columns]
@@ -34,16 +37,16 @@ def _calc_ratio(target_columns, df_population, df_infected):
     return df_result.T
 
 
-def _make_graph_ratio(df_result, prefectures, target):
+def _make_graph_ratio(df_result: DataFrame, prefecture: Prefecture, target: Grouping):
     # グラフ全体の設定
     plt.figure(figsize=(10.0, 8.0))  # 横、縦
     plt.plot(df_result, label=df_result.columns)
 
     # 背景 https://bunsekikobako.com/axvspan-and-axhspan/
-    for term in emergency_term:  # 緊急事態宣言
-        plt.axvspan(term[0], term[1], color="orange", alpha=0.3, label=term[2])
-    for term in semi_emergency_term:  # まん延防止等重点措置
-        plt.axvspan(term[0], term[1], color="yellow", alpha=0.3, label=term[2])
+    for term in EMERGENCY_TERM:  # 緊急事態宣言
+        plt.axvspan(term.start, term.end, color="orange", alpha=0.3, label=term.name)
+    for term in SEMI_EMERGENCY_TERM:  # まん延防止等重点措置
+        plt.axvspan(term.start, term.end, color="yellow", alpha=0.3, label=term.name)
 
     # Y軸 主目盛
     plt.ylabel('人口当たり感染者割合(%)')
@@ -69,16 +72,17 @@ def _make_graph_ratio(df_result, prefectures, target):
 
     # 全体設定
     plt.legend(loc='upper left')
-    plt.title(f"{prefectures} [{target}]", fontsize=14)
+    plt.title(f"{prefecture.name} [{target.value.name}]", fontsize=14)
     plt.tight_layout()
-    plt.savefig(f"output/ratio_{prefectures}_{target}.png")
+    plt.savefig(f"output/ratio_{prefecture.key}_{target.value.key}.png")
     plt.close('all')
 
 
-def make_output_ratio(target_columns, population, infected, prefectures, target):
+def make_output_ratio(target_columns: dict[str, str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
+                      , prefecture: Prefecture, target: Grouping):
     # 出力用にデータを加工
-    df_result = _calc_ratio(target_columns, population.get(target), infected.get(target))
+    df_result = _calc_ratio(list(target_columns.keys()), population.get(target.value.key), infected.get(target.value.key))
 
     # 出力
-    _make_graph_ratio(df_result, prefectures, target)
-    df_result.to_csv(f'output/ratio_{prefectures}_{target}.csv')
+    _make_graph_ratio(df_result, prefecture, target)
+    df_result.to_csv(f'output/ratio_{prefecture.key}_{target.value.key}.csv', line_terminator="\n")

@@ -3,8 +3,10 @@ import glob
 import re
 import datetime
 
+from pandas import DataFrame
 
-def _read_file(month, file_path):
+
+def _read_file(month: datetime, file_path: str) -> DataFrame:
     # 3行目をヘッダーとして使う、0から数えるので1引く
     df_input = pd.read_excel(file_path, index_col=0, header=(3 - 1)) \
         .loc['大阪府'] \
@@ -16,7 +18,7 @@ def _read_file(month, file_path):
     return df_input
 
 
-def _search_file_list(dir_path):
+def _search_file_list(dir_path: str) -> dict[datetime, str]:
     repeater = re.compile('[0-9]{6}')
 
     result = {}
@@ -39,4 +41,4 @@ if __name__ == '__main__':
         df_data = pd.concat([df_data, _read_file(key, file_map[key])])
     df_data.sort_values('month', inplace=True)
 
-    df_data.to_csv('input/jinkou-xlslist.csv')
+    df_data.to_csv('input/jinkou-xlslist.csv', line_terminator="\n")

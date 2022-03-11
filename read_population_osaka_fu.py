@@ -3,9 +3,10 @@ import pandas as pd
 # 大阪府毎月推計人口
 # 大阪府 group by 性別、5歳階級
 # https://www.pref.osaka.lg.jp/toukei/jinkou/jinkou-xlslist.html
+from pandas import DataFrame
 
 
-def joined_population(period_array, df_input):
+def joined_population(period_array: list[str], df_input: DataFrame) -> DataFrame:
     columnNamesArray = [['０～４歳', '５～９歳'],
                         ['10～14歳', '15～19歳'],
                         ['20～24歳', '25～29歳'],
@@ -29,7 +30,7 @@ def joined_population(period_array, df_input):
     return df_results
 
 
-def read_population_osaka_fu(period_array, file_path, encode):
+def read_population_osaka_fu(period_array: list[str], file_path: str, encode: str):
     # make_population_osaka_fu.pyでCSVにしたファイルを読み込む
     csv_input = pd.read_csv(filepath_or_buffer=file_path, encoding=encode, sep=",", index_col=[0, 1])
     osaka_fu_male = csv_input.loc['男性']

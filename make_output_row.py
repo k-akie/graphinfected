@@ -2,20 +2,24 @@ import datetime
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.ticker as ticker
+from pandas import DataFrame
 
-from graph_option import emergency_term, semi_emergency_term
+from type.Term import EMERGENCY_TERM, SEMI_EMERGENCY_TERM
+from type.Grouping import Grouping
+from type.Prefecture import Prefecture
 
 
-def _make_graph_row(df_population, df_infected, prefectures, target):
+def _make_graph_row(df_population: DataFrame, df_infected: DataFrame
+                    , prefecture: Prefecture, target: Grouping):
     # グラフ全体の設定
     plt.figure(figsize=(10.0, 8.0))  # 横、縦
     plt.plot(df_infected, label=df_infected.columns)
 
     # 背景 https://bunsekikobako.com/axvspan-and-axhspan/
-    for term in emergency_term:  # 緊急事態宣言
-        plt.axvspan(term[0], term[1], color="orange", alpha=0.3, label=term[2])
-    for term in semi_emergency_term:  # まん延防止等重点措置
-        plt.axvspan(term[0], term[1], color="yellow", alpha=0.3, label=term[2])
+    for term in EMERGENCY_TERM:  # 緊急事態宣言
+        plt.axvspan(term.start, term.end, color="orange", alpha=0.3, label=term.name)
+    for term in SEMI_EMERGENCY_TERM:  # まん延防止等重点措置
+        plt.axvspan(term.start, term.end, color="yellow", alpha=0.3, label=term.name)
 
     # 左Y軸 主目盛
     plt.ylabel('感染者数')
@@ -42,25 +46,30 @@ def _make_graph_row(df_population, df_infected, prefectures, target):
 
     # 右Y軸 主目盛
     ax2 = plt.twinx()
-    ax2.plot(df_population, label=df_population.columns, linestyle='dashdot', linewidth =0.8)
+    ax2.plot(df_population, label=df_population.columns, linestyle='dashdot', linewidth=0.8)
     ax2.set_ylim(0, 1000000)
     ax2.yaxis.set_major_locator(ticker.MultipleLocator(250000))
     ax2.set_ylabel('人口')
 
     # 全体設定
-    plt.title(f"{prefectures} [{target}]", fontsize=14)
+    plt.title(f"{prefecture.name} [{target.value.name}]", fontsize=14)
     plt.tight_layout()
-    plt.savefig(f"output/row_{prefectures}_{target}.png")
+    plt.savefig(f"output/row_{prefecture.key}_{target.value.key}.png")
     plt.close('all')
 
 
-def make_output_row(target_columns, population, infected, prefectures, target):
-    df_population = population.get(target)
+def make_output_row(target_columns: dict[str, str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
+                    , prefecture: Prefecture, target: Grouping):
+    df_population = population.get(target.value.key)
 
-    df_infected = infected.get(target)
-    df_infected.reset_index(inplace=True)
-    df_infected.set_index('week_start', inplace=True)
+    df_infected = infected.get(target.value.key)
+    df_infected_graph = df_infected.reset_index()\
+        .set_index('week_start')\
+        .rename(columns=target_columns)[list(target_columns.values())]
 
     # 出力
-    _make_graph_row(df_population, df_infected[target_columns], prefectures, target)
-    df_population.to_csv(f'output/row_{prefectures}_{target}.csv')
+    _make_graph_row(df_population, df_infected_graph, prefecture, target)
+    df_population\
+        .to_csv(f'output/row_{prefecture.key}_{target.value.key}_population.csv', line_terminator="\n")
+    df_infected[list(target_columns.keys())]\
+        .to_csv(f'output/row_{prefecture.key}_{target.value.key}_infected.csv', line_terminator="\n")
