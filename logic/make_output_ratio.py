@@ -1,16 +1,16 @@
 import datetime
 
-import pandas as pd
-import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+import pandas as pd
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from pandas import DataFrame, Index
 
-from type.Term import EMERGENCY_TERM, SEMI_EMERGENCY_TERM
 from type.Grouping import Grouping
 from type.Prefecture import Prefecture
+from type.Term import EMERGENCY_TERM, SEMI_EMERGENCY_TERM
 
 
 def _search_month(target_month: datetime, exists_month: Index):

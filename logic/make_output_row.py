@@ -1,15 +1,15 @@
 import datetime
 
-import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from pandas import DataFrame
 
-from type.Term import EMERGENCY_TERM, SEMI_EMERGENCY_TERM
 from type.Grouping import Grouping
 from type.Prefecture import Prefecture
+from type.Term import EMERGENCY_TERM, SEMI_EMERGENCY_TERM
 
 
 def _make_graph_row(df_population: DataFrame, df_infected: DataFrame

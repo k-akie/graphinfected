@@ -1,5 +1,7 @@
-import pandas as pd
 from datetime import datetime as dt
+
+import pandas as pd
+
 
 # 性別・年代別新規陽性者数（週別）
 # group by 都道府県、性別、10歳階級
