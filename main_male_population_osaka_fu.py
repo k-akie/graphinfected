@@ -22,7 +22,7 @@ def _search_file_list(dir_path: str) -> dict[datetime, str]:
     repeater = re.compile('[0-9]{6}')
 
     result = {}
-    files = glob.glob(dir_path + '/*')
+    files = glob.glob(dir_path + '/*.xlsx')
     for file in files:
         target = repeater.search(file).group(0) + '01'
         target_datetime = datetime.datetime.strptime(target, '%Y%m%d')
