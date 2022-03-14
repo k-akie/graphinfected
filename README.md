@@ -28,6 +28,6 @@
 ## 出力例
 ### グラフ
 - 大阪府全体の人口当たりの感染者割合
-![ratio_osaka_all](https://github.com/k-akie/graphinfected/blob/main/output/ratio_osaka_all.png)
+![ratio_osaka_all](./output/ratio_osaka_all.png)
 - 大阪府全体の人口、感染者数
-![row_osaka_all](https://github.com/k-akie/graphinfected/blob/main/output/row_osaka_all.png)
+![row_osaka_all](./output/row_osaka_all.png)
