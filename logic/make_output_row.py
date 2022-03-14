@@ -1,7 +1,10 @@
 import datetime
+
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.ticker as ticker
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 from pandas import DataFrame
 
 from type.Term import EMERGENCY_TERM, SEMI_EMERGENCY_TERM
@@ -12,37 +15,40 @@ from type.Prefecture import Prefecture
 def _make_graph_row(df_population: DataFrame, df_infected: DataFrame
                     , prefecture: Prefecture, target: Grouping):
     # グラフ全体の設定
-    plt.figure(figsize=(10.0, 8.0))  # 横、縦
-    plt.plot(df_infected, label=df_infected.columns)
+    fig: Figure = plt.figure(figsize=(10.0, 8.0))  # 横、縦
+    ax: Axes = fig.add_subplot(111, title=f"{prefecture.name} [{target.value.name}]")
+    ax.plot(df_infected, label=df_infected.columns)
 
     # 背景 https://bunsekikobako.com/axvspan-and-axhspan/
     for term in EMERGENCY_TERM:  # 緊急事態宣言
-        plt.axvspan(term.start, term.end, color="orange", alpha=0.3, label=term.name)
+        ax.axvspan(term.start, term.end, color="orange", alpha=0.3, label=term.name)
     for term in SEMI_EMERGENCY_TERM:  # まん延防止等重点措置
-        plt.axvspan(term.start, term.end, color="yellow", alpha=0.3, label=term.name)
+        ax.axvspan(term.start, term.end, color="yellow", alpha=0.3, label=term.name)
+
+    # 凡例
+    ax.legend(loc='upper left')
 
     # 左Y軸 主目盛
-    plt.ylabel('感染者数')
-    plt.ylim(0, 15000)
-    plt.gca().yaxis.set_major_locator(ticker.MultipleLocator(5000))
-    plt.gca().tick_params(which='major', axis='y', length=6)
-    plt.grid(which='major', axis='y')
+    ax.set_ylabel('感染者数')
+    ax.set_ylim(0, 15000)
+    ax.yaxis.set_major_locator(ticker.MultipleLocator(5000))
+    ax.tick_params(which='major', axis='y', length=6)
+    ax.grid(which='major', axis='y')
     # 左Y軸 補助目盛
-    plt.gca().yaxis.set_minor_locator(ticker.MultipleLocator(1000))
-    plt.gca().tick_params(which='minor', axis='y', direction='in')
-    plt.grid(which='minor', axis='y', linestyle='dotted')
-    plt.legend(loc='upper left')
+    ax.yaxis.set_minor_locator(ticker.MultipleLocator(1000))
+    ax.tick_params(which='minor', axis='y', direction='in')
+    ax.grid(which='minor', axis='y', linestyle='dotted')
 
     # X軸 主目盛
-    plt.xlim(datetime.date(2020, 3, 1), datetime.date(2022, 5, 1))
-    plt.xticks(rotation=45)
-    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y/%m/%d'))
-    plt.gca().tick_params(which='major', axis='x', length=6)
-    plt.grid(which='major', axis='x')
+    ax.set_xlim(datetime.date(2020, 3, 1), datetime.date(2022, 5, 1))
+    ax.set_xticklabels(labels='', rotation=45)
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y/%m/%d'))
+    ax.tick_params(which='major', axis='x', length=6)
+    ax.grid(which='major', axis='x')
     # X軸 補助目盛
-    plt.gca().xaxis.set_minor_locator(mdates.MonthLocator())
-    plt.gca().tick_params(which='minor', axis='x', direction='in')
-    plt.grid(which='minor', axis='x', linestyle='dotted')
+    ax.xaxis.set_minor_locator(mdates.MonthLocator())
+    ax.tick_params(which='minor', axis='x', direction='in')
+    ax.grid(which='minor', axis='x', linestyle='dotted')
 
     # 右Y軸 主目盛
     ax2 = plt.twinx()
@@ -52,9 +58,8 @@ def _make_graph_row(df_population: DataFrame, df_infected: DataFrame
     ax2.set_ylabel('人口')
 
     # 全体設定
-    plt.title(f"{prefecture.name} [{target.value.name}]", fontsize=14)
-    plt.tight_layout()
-    plt.savefig(f"output/row_{prefecture.key}_{target.value.key}.png")
+    fig.tight_layout()
+    fig.savefig(f"output/row_{prefecture.key}_{target.value.key}.png")
     plt.close('all')
 
 
