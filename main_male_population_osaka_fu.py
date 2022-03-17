@@ -5,6 +5,8 @@ import re
 import pandas as pd
 from pandas import DataFrame
 
+from type.TypeDate import TypeDate
+
 
 def _read_file(month: datetime, file_path: str) -> DataFrame:
     # 3行目をヘッダーとして使う、0から数えるので1引く
@@ -25,7 +27,7 @@ def _search_file_list(dir_path: str) -> dict[datetime, str]:
     files = glob.glob(dir_path + '/*.xlsx')
     for file in files:
         target = repeater.search(file).group(0) + '01'
-        target_datetime = datetime.datetime.strptime(target, '%Y%m%d')
+        target_datetime = TypeDate.from_str(target, '%Y%m%d')
         result[target_datetime] = file
 
     return result

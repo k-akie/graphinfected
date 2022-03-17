@@ -11,6 +11,7 @@ from pandas import DataFrame, Index
 from type.Grouping import Grouping
 from type.Prefecture import Prefecture
 from type.Term import EMERGENCY_TERM, SEMI_EMERGENCY_TERM
+from type.TypeDate import TypeDate
 
 
 def _search_month(target_month: datetime, exists_month: Index):
@@ -66,9 +67,9 @@ def _make_graph_ratio(df_result: DataFrame, prefecture: Prefecture, target: Grou
     ax.grid(which='minor', axis='y', linestyle='dotted')
 
     # X軸 主目盛
-    ax.set_xlim(datetime.date(2020, 3, 1), datetime.date(2022, 5, 1))
+    ax.set_xlim(TypeDate.min(), TypeDate.max())
     ax.set_xticklabels(labels='', rotation=45)
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y/%m/%d'))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter(TypeDate.format()))
     ax.tick_params(which='major', axis='x', length=6)
     ax.grid(which='major', axis='x')
     # X軸 補助目盛
