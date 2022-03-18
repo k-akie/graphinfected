@@ -15,7 +15,7 @@ from type.Term import EMERGENCY_TERM, SEMI_EMERGENCY_TERM
 from type.TypeDate import TypeDate
 
 
-def _search_month(target_month: datetime, exists_month: Index):
+def __search_month(target_month: datetime, exists_month: Index):
     if target_month in exists_month:
         return target_month
 
@@ -28,12 +28,12 @@ def _search_month(target_month: datetime, exists_month: Index):
     return exists_month[len(exists_month)-1]
 
 
-def _calc_ratio(target_columns: list[str], df_population: DataFrame, df_infected: DataFrame) -> DataFrame:
+def __calc_ratio(target_columns: list[str], df_population: DataFrame, df_infected: DataFrame) -> DataFrame:
     df_result = pd.DataFrame()
     for index, infectedRow in df_infected.iterrows():
         infected_series = infectedRow.loc[target_columns]
 
-        month = _search_month(infectedRow['month'], df_population.index)
+        month = __search_month(infectedRow['month'], df_population.index)
         population_series = df_population.loc[month]
 
         df_result[infectedRow['week_start']] = infected_series * 100 / population_series
@@ -41,7 +41,7 @@ def _calc_ratio(target_columns: list[str], df_population: DataFrame, df_infected
     return df_result.T
 
 
-def _make_graph_ratio(df_result: DataFrame, prefecture: Prefecture, target: Grouping):
+def __make_graph_ratio(df_result: DataFrame, prefecture: Prefecture, target: Grouping):
     # グラフ全体の設定
     fig: Figure = plt.figure(figsize=(10.0, 8.0))  # 横、縦
     ax: Axes = fig.add_subplot(111, title=f"{prefecture.name} [{target.value.name}]")
@@ -87,11 +87,11 @@ def _make_graph_ratio(df_result: DataFrame, prefecture: Prefecture, target: Grou
 def make_output_ratio(target_columns: dict[str, str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
                       , prefecture: Prefecture, target: Grouping):
     # 出力用にデータを加工
-    df_result = _calc_ratio(list(target_columns.keys()), population.get(target.value.key), infected.get(target.value.key))
+    df_result = __calc_ratio(list(target_columns.keys()), population.get(target.value.key), infected.get(target.value.key))
 
     # CSV出力
     df_result.to_csv(FilePath.output(f'ratio_{prefecture.key}_{target.value.key}.csv'), line_terminator="\n")
 
     # グラフ出力
     df_result_graph = df_result.rename(columns=target_columns)
-    _make_graph_ratio(df_result_graph, prefecture, target)
+    __make_graph_ratio(df_result_graph, prefecture, target)

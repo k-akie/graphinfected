@@ -6,7 +6,7 @@ import pandas as pd
 from pandas import DataFrame
 
 
-def joined_population(period_array: list[str], df_input: DataFrame) -> DataFrame:
+def __joined_population(period_array: list[str], df_input: DataFrame) -> DataFrame:
     columnNamesArray = [['０～４歳', '５～９歳'],
                         ['10～14歳', '15～19歳'],
                         ['20～24歳', '25～29歳'],
@@ -36,7 +36,7 @@ def read_population_osaka_fu(period_array: list[str], file_path: str, encode: st
     osaka_fu_male = csv_input.loc['男性']
     osaka_fu_female = csv_input.loc['女性']
 
-    male = joined_population(period_array, osaka_fu_male)
-    female = joined_population(period_array, osaka_fu_female)
+    male = __joined_population(period_array, osaka_fu_male)
+    female = __joined_population(period_array, osaka_fu_female)
 
     return {'male': male, 'female': female, 'all': male + female}

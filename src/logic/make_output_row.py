@@ -12,8 +12,8 @@ from type.Term import EMERGENCY_TERM, SEMI_EMERGENCY_TERM
 from type.TypeDate import TypeDate
 
 
-def _make_graph_row(df_population: DataFrame, df_infected: DataFrame
-                    , prefecture: Prefecture, target: Grouping):
+def __make_graph_row(df_population: DataFrame, df_infected: DataFrame
+                     , prefecture: Prefecture, target: Grouping):
     # グラフ全体の設定
     fig: Figure = plt.figure(figsize=(10.0, 8.0))  # 横、縦
     ax: Axes = fig.add_subplot(111, title=f"{prefecture.name} [{target.value.name}]")
@@ -69,7 +69,6 @@ def make_output_row(target_columns: dict[str, str], population: dict[str, DataFr
     df_infected = infected.get(target.value.key)
 
     # CSV出力
-
     df_population\
         .to_csv(FilePath.output(f'row_{prefecture.key}_{target.value.key}_population.csv'), line_terminator="\n")
     df_infected[list(target_columns.keys())]\
@@ -79,4 +78,4 @@ def make_output_row(target_columns: dict[str, str], population: dict[str, DataFr
     df_infected_graph = df_infected.reset_index()\
         .set_index('week_start')\
         .rename(columns=target_columns)[list(target_columns.values())]
-    _make_graph_row(df_population, df_infected_graph, prefecture, target)
+    __make_graph_row(df_population, df_infected_graph, prefecture, target)
