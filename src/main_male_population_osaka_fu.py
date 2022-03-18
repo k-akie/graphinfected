@@ -16,7 +16,7 @@ def __read_file(month: datetime, file_path: str) -> DataFrame:
         .set_axis(['全体', '男性', '女性'], axis='index') \
         .loc[['男性', '女性']]
     df_input.insert(0, 'month', month)
-    df_input.index.name = 'gender'
+    df_input.index.type = 'gender'
 
     return df_input
 

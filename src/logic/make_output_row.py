@@ -7,9 +7,10 @@ from pandas import DataFrame
 
 from type.FilePath import FilePath
 from type.Grouping import Grouping
-from type.Term import EMERGENCY_TERM, SEMI_EMERGENCY_TERM
 from type.TypeDate import TypeDate
 from type.prefecture.PrefName import PrefName
+from type.term.Term import OSAKA_TERMS
+from type.term.TermType import TermType
 
 
 def __make_graph_row(df_population: DataFrame, df_infected: DataFrame
@@ -20,10 +21,17 @@ def __make_graph_row(df_population: DataFrame, df_infected: DataFrame
     ax.plot(df_infected, label=df_infected.columns)
 
     # 背景 https://bunsekikobako.com/axvspan-and-axhspan/
-    for term in EMERGENCY_TERM:  # 緊急事態宣言
-        ax.axvspan(mdates.date2num(term.start), mdates.date2num(term.end), color="orange", alpha=0.3, label=term.name)
-    for term in SEMI_EMERGENCY_TERM:  # まん延防止等重点措置
-        ax.axvspan(mdates.date2num(term.start), mdates.date2num(term.end), color="yellow", alpha=0.3, label=term.name)
+    for term in OSAKA_TERMS:
+        # label設定した数だけ凡例にも追加されてしまうため、2回目以降はNoneにする
+        lines, labels = ax.get_legend_handles_labels()
+        label = None if term.type.value in labels else term.type.value
+
+        if term.type == TermType.EMERGENCY:
+            ax.axvspan(mdates.date2num(term.start), mdates.date2num(term.end)
+                       , color="orange", alpha=0.3, label=label)
+        if term.type == TermType.SEMI_EMERGENCY:
+            ax.axvspan(mdates.date2num(term.start), mdates.date2num(term.end)
+                       , color="yellow", alpha=0.3, label=label)
 
     # 凡例
     ax.legend(loc='upper left')
