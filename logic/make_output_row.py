@@ -5,6 +5,7 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from pandas import DataFrame
 
+from type.FilePath import FilePath
 from type.Grouping import Grouping
 from type.Prefecture import Prefecture
 from type.Term import EMERGENCY_TERM, SEMI_EMERGENCY_TERM
@@ -58,7 +59,7 @@ def _make_graph_row(df_population: DataFrame, df_infected: DataFrame
 
     # 全体設定
     fig.tight_layout()
-    fig.savefig(f"output/row_{prefecture.key}_{target.value.key}.png")
+    fig.savefig(FilePath.output(f'row_{prefecture.key}_{target.value.key}.png'))
     plt.close('all')
 
 
@@ -68,10 +69,11 @@ def make_output_row(target_columns: dict[str, str], population: dict[str, DataFr
     df_infected = infected.get(target.value.key)
 
     # CSV出力
+
     df_population\
-        .to_csv(f'output/row_{prefecture.key}_{target.value.key}_population.csv', line_terminator="\n")
+        .to_csv(FilePath.output(f'row_{prefecture.key}_{target.value.key}_population.csv'), line_terminator="\n")
     df_infected[list(target_columns.keys())]\
-        .to_csv(f'output/row_{prefecture.key}_{target.value.key}_infected.csv', line_terminator="\n")
+        .to_csv(FilePath.output(f'row_{prefecture.key}_{target.value.key}_infected.csv'), line_terminator="\n")
 
     # グラフ出力
     df_infected_graph = df_infected.reset_index()\
