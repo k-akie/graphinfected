@@ -13,3 +13,7 @@ class FilePath:
     @staticmethod
     def output(path: str = '') -> str:
         return os.path.join(FilePath.__root(), 'output', path)
+
+    @staticmethod
+    def exists(path: str) -> bool:
+        return os.path.exists(path)

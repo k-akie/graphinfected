@@ -34,9 +34,15 @@ def __search_file_list(dir_path: str) -> dict[datetime, str]:
     return result
 
 
-if __name__ == '__main__':
+def make_population_csv():
     # https://www.pref.osaka.lg.jp/toukei/jinkou/jinkou-xlslist.html
     # ひと月ごとにエクセルファイルがある
+
+    output_path = FilePath.input('jinkou-xlslist.csv')
+    if FilePath.exists(output_path):
+        # 出力先ファイルがあれば、再生成しない
+        return
+
     file_map = __search_file_list(FilePath.input('jinkou-xlslist'))
 
     df_data = pd.DataFrame()
@@ -44,4 +50,4 @@ if __name__ == '__main__':
         df_data = pd.concat([df_data, __read_file(key, file_map[key])])
     df_data.sort_values('month', inplace=True)
 
-    df_data.to_csv(FilePath.input('jinkou-xlslist.csv'), line_terminator="\n")
+    df_data.to_csv(output_path, line_terminator="\n")
