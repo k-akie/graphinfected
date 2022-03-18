@@ -13,9 +13,9 @@ class Term:
     """
     start: datetime
     end: datetime
-    name: str
+    name: str | None
 
-    def __init__(self, start: datetime, end: datetime, name: str):
+    def __init__(self, start: datetime, end: datetime, name: str | None):
         self.start = start
         self.end = end
         self.name = name
