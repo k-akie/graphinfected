@@ -17,12 +17,12 @@
 ## 実行手順
 ### 人口データの月毎エクセルファイルを1CSVにまとめる
 ```
-./venv/Scripts/python main_male_population_osaka_fu.py
+python ./src/main_male_population_osaka_fu.py
 ```
 
 ### CSV、グラフを出力する
 ```
-./venv/Scripts/python main.py
+python ./src/main.py
 ``` 
 
 ## 出力例
