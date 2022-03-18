@@ -1,9 +1,12 @@
-import pandas as pd
+import datetime
 import glob
 import re
-import datetime
 
+import pandas as pd
 from pandas import DataFrame
+
+from type.FilePath import FilePath
+from type.TypeDate import TypeDate
 
 
 def _read_file(month: datetime, file_path: str) -> DataFrame:
@@ -22,10 +25,10 @@ def _search_file_list(dir_path: str) -> dict[datetime, str]:
     repeater = re.compile('[0-9]{6}')
 
     result = {}
-    files = glob.glob(dir_path + '/*')
+    files = glob.glob(dir_path + '/*.xlsx')
     for file in files:
         target = repeater.search(file).group(0) + '01'
-        target_datetime = datetime.datetime.strptime(target, '%Y%m%d')
+        target_datetime = TypeDate.from_str(target, '%Y%m%d')
         result[target_datetime] = file
 
     return result
@@ -34,11 +37,11 @@ def _search_file_list(dir_path: str) -> dict[datetime, str]:
 if __name__ == '__main__':
     # https://www.pref.osaka.lg.jp/toukei/jinkou/jinkou-xlslist.html
     # ひと月ごとにエクセルファイルがある
-    file_map = _search_file_list('input/jinkou-xlslist')
+    file_map = _search_file_list(FilePath.input('jinkou-xlslist'))
 
     df_data = pd.DataFrame()
     for key in sorted(file_map.keys()):
         df_data = pd.concat([df_data, _read_file(key, file_map[key])])
     df_data.sort_values('month', inplace=True)
 
-    df_data.to_csv('input/jinkou-xlslist.csv', line_terminator="\n")
+    df_data.to_csv(FilePath.input('jinkou-xlslist.csv'), line_terminator="\n")
