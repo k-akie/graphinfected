@@ -1,3 +1,7 @@
+from type.prefecture.PrefCode import PrefCode
+from type.prefecture.PrefName import PrefName
+
+
 class Prefecture:
     """
     都道府県
@@ -7,14 +11,12 @@ class Prefecture:
         name    表記に使う日本語名称
         code    都道府県コード(2桁の数字)
     """
-    key: str
-    name: str
-    code: str
+    name: PrefName
+    code: PrefCode
 
-    def __init__(self, key: str, name: str, code: str):
-        self.key = key
+    def __init__(self, name: PrefName, code: PrefCode):
         self.name = name
         self.code = code
 
     def __str__(self):
-        return self.key + ':' + self.name + '(code: ' + self.code + ')'
+        return self.name + ', ' + self.code

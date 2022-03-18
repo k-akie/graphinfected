@@ -10,9 +10,9 @@ from pandas import DataFrame, Index
 
 from type.FilePath import FilePath
 from type.Grouping import Grouping
-from type.Prefecture import Prefecture
 from type.Term import EMERGENCY_TERM, SEMI_EMERGENCY_TERM
 from type.TypeDate import TypeDate
+from type.prefecture.PrefName import PrefName
 
 
 def __search_month(target_month: datetime, exists_month: Index):
@@ -41,10 +41,10 @@ def __calc_ratio(target_columns: list[str], df_population: DataFrame, df_infecte
     return df_result.T
 
 
-def __make_graph_ratio(df_result: DataFrame, prefecture: Prefecture, target: Grouping):
+def __make_graph_ratio(df_result: DataFrame, pref_name: PrefName, target: Grouping):
     # グラフ全体の設定
     fig: Figure = plt.figure(figsize=(10.0, 8.0))  # 横、縦
-    ax: Axes = fig.add_subplot(111, title=f"{prefecture.name} [{target.value.name}]")
+    ax: Axes = fig.add_subplot(111, title=f"{pref_name.name} [{target.value.name}]")
     ax.plot(df_result, label=df_result.columns)
 
     # 背景 https://bunsekikobako.com/axvspan-and-axhspan/
@@ -80,18 +80,18 @@ def __make_graph_ratio(df_result: DataFrame, prefecture: Prefecture, target: Gro
 
     # 全体設定
     fig.tight_layout()
-    fig.savefig(FilePath.output(f'ratio_{prefecture.key}_{target.value.key}.png'))
+    fig.savefig(FilePath.output(f'ratio_{pref_name.key}_{target.value.key}.png'))
     plt.close('all')
 
 
 def make_output_ratio(target_columns: dict[str, str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
-                      , prefecture: Prefecture, target: Grouping):
+                      , pref_name: PrefName, target: Grouping):
     # 出力用にデータを加工
     df_result = __calc_ratio(list(target_columns.keys()), population.get(target.value.key), infected.get(target.value.key))
 
     # CSV出力
-    df_result.to_csv(FilePath.output(f'ratio_{prefecture.key}_{target.value.key}.csv'), line_terminator="\n")
+    df_result.to_csv(FilePath.output(f'ratio_{pref_name.key}_{target.value.key}.csv'), line_terminator="\n")
 
     # グラフ出力
     df_result_graph = df_result.rename(columns=target_columns)
-    __make_graph_ratio(df_result_graph, prefecture, target)
+    __make_graph_ratio(df_result_graph, pref_name, target)

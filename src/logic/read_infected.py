@@ -1,15 +1,15 @@
 import pandas as pd
 
-from type.Prefecture import Prefecture
 from type.TypeDate import TypeDate
+from type.prefecture.PrefCode import PrefCode
 
 
 # 性別・年代別新規陽性者数（週別）
 # group by 都道府県、性別、10歳階級
 # https://covid19.mhlw.go.jp/extensions/public/index.html
-def read_infected(file_path: str, encode: str, prefecture: Prefecture):
+def read_infected(file_path: str, encode: str, pref_code: PrefCode):
     csv_input = pd.read_csv(filepath_or_buffer=file_path, encoding=encode, sep=",", header=1, index_col=0)
-    osaka_fu = csv_input.filter(like=prefecture.code, axis='columns')
+    osaka_fu = csv_input.filter(like=pref_code.value, axis='columns')
 
     # *を0にしてobject -> intにする
     osaka_fu = osaka_fu.replace(['*'], 0).astype(int)
@@ -23,11 +23,11 @@ def read_infected(file_path: str, encode: str, prefecture: Prefecture):
     # https://note.nkmk.me/python-pandas-dataframe-rename/
     male = osaka_fu.filter(like='Male ') \
         .rename(columns=lambda s: s.removeprefix('Male ')) \
-        .rename(columns=lambda s: s.removesuffix(prefecture.code)) \
+        .rename(columns=lambda s: s.removesuffix(pref_code.value)) \
 
     female = osaka_fu.filter(like='Female ') \
         .rename(columns=lambda s: s.removeprefix('Female ')) \
-        .rename(columns=lambda s: s.removesuffix(prefecture.code)) \
+        .rename(columns=lambda s: s.removesuffix(pref_code.value)) \
 
     result_male = male.reset_index().join([df_month]).set_index('Week')
     result_female = female.reset_index().join([df_month]).set_index('Week')
