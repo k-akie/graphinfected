@@ -49,9 +49,9 @@ def _make_graph_ratio(df_result: DataFrame, prefecture: Prefecture, target: Grou
 
     # 背景 https://bunsekikobako.com/axvspan-and-axhspan/
     for term in EMERGENCY_TERM:  # 緊急事態宣言
-        ax.axvspan(term.start, term.end, color="orange", alpha=0.3, label=term.name)
+        ax.axvspan(mdates.date2num(term.start), mdates.date2num(term.end), color="orange", alpha=0.3, label=term.name)
     for term in SEMI_EMERGENCY_TERM:  # まん延防止等重点措置
-        ax.axvspan(term.start, term.end, color="yellow", alpha=0.3, label=term.name)
+        ax.axvspan(mdates.date2num(term.start), mdates.date2num(term.end), color="yellow", alpha=0.3, label=term.name)
 
     # 凡例
     ax.legend(loc='upper left')
@@ -68,7 +68,7 @@ def _make_graph_ratio(df_result: DataFrame, prefecture: Prefecture, target: Grou
     ax.grid(which='minor', axis='y', linestyle='dotted')
 
     # X軸 主目盛
-    ax.set_xlim(TypeDate.min(), TypeDate.max())
+    ax.set_xlim(mdates.date2num(TypeDate.min()), mdates.date2num(TypeDate.max()))
     ax.set_xticklabels(labels='', rotation=45)
     ax.xaxis.set_major_formatter(mdates.DateFormatter(TypeDate.format()))
     ax.tick_params(which='major', axis='x', length=6)

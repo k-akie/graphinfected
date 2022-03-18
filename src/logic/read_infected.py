@@ -1,7 +1,7 @@
+import pandas as pd
+
 from type.Prefecture import Prefecture
 from type.TypeDate import TypeDate
-
-import pandas as pd
 
 
 # 性別・年代別新規陽性者数（週別）
