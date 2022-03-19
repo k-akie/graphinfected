@@ -11,8 +11,7 @@ from pandas import DataFrame, Index
 from type.FilePath import FilePath
 from type.Grouping import Grouping
 from type.TypeDate import TypeDate
-from type.prefecture.PrefName import PrefName
-from type.term.Term import OSAKA_TERMS
+from type.prefecture.Prefecture import Prefecture
 from type.term.TermType import TermType
 
 
@@ -42,14 +41,14 @@ def __calc_ratio(target_columns: list[str], df_population: DataFrame, df_infecte
     return df_result.T
 
 
-def __make_graph_ratio(df_result: DataFrame, pref_name: PrefName, target: Grouping):
+def __make_graph_ratio(df_result: DataFrame, pref: Prefecture, target: Grouping):
     # グラフ全体の設定
     fig: Figure = plt.figure(figsize=(10.0, 8.0))  # 横、縦
-    ax: Axes = fig.add_subplot(111, title=f"{pref_name.name} [{target.value.name}]")
+    ax: Axes = fig.add_subplot(111, title=f"{pref.name.name} [{target.value.name}]")
     ax.plot(df_result, label=df_result.columns)
 
     # 背景 https://bunsekikobako.com/axvspan-and-axhspan/
-    for term in OSAKA_TERMS:
+    for term in pref.terms:
         # label設定した数だけ凡例にも追加されてしまうため、2回目以降はNoneにする
         lines, labels = ax.get_legend_handles_labels()
         label = None if term.type.value in labels else term.type.value
@@ -88,18 +87,18 @@ def __make_graph_ratio(df_result: DataFrame, pref_name: PrefName, target: Groupi
 
     # 全体設定
     fig.tight_layout()
-    fig.savefig(FilePath.output(f'ratio_{pref_name.key}_{target.value.key}.png'))
+    fig.savefig(FilePath.output(f'ratio_{pref.name.key}_{target.value.key}.png'))
     plt.close('all')
 
 
 def make_output_ratio(target_columns: dict[str, str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
-                      , pref_name: PrefName, target: Grouping):
+                      , pref: Prefecture, target: Grouping):
     # 出力用にデータを加工
     df_result = __calc_ratio(list(target_columns.keys()), population.get(target.value.key), infected.get(target.value.key))
 
     # CSV出力
-    df_result.to_csv(FilePath.output(f'ratio_{pref_name.key}_{target.value.key}.csv'), line_terminator="\n")
+    df_result.to_csv(FilePath.output(f'ratio_{pref.name.key}_{target.value.key}.csv'), line_terminator="\n")
 
     # グラフ出力
     df_result_graph = df_result.rename(columns=target_columns)
-    __make_graph_ratio(df_result_graph, pref_name, target)
+    __make_graph_ratio(df_result_graph, pref, target)

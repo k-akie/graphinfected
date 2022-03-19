@@ -8,20 +8,19 @@ from pandas import DataFrame
 from type.FilePath import FilePath
 from type.Grouping import Grouping
 from type.TypeDate import TypeDate
-from type.prefecture.PrefName import PrefName
-from type.term.Term import OSAKA_TERMS
+from type.prefecture.Prefecture import Prefecture
 from type.term.TermType import TermType
 
 
 def __make_graph_row(df_population: DataFrame, df_infected: DataFrame
-                     , pref_name: PrefName, target: Grouping):
+                     , pref: Prefecture, target: Grouping):
     # グラフ全体の設定
     fig: Figure = plt.figure(figsize=(10.0, 8.0))  # 横、縦
-    ax: Axes = fig.add_subplot(111, title=f"{pref_name.name} [{target.value.name}]")
+    ax: Axes = fig.add_subplot(111, title=f"{pref.name.name} [{target.value.name}]")
     ax.plot(df_infected, label=df_infected.columns)
 
     # 背景 https://bunsekikobako.com/axvspan-and-axhspan/
-    for term in OSAKA_TERMS:
+    for term in pref.terms:
         # label設定した数だけ凡例にも追加されてしまうため、2回目以降はNoneにする
         lines, labels = ax.get_legend_handles_labels()
         label = None if term.type.value in labels else term.type.value
@@ -67,23 +66,23 @@ def __make_graph_row(df_population: DataFrame, df_infected: DataFrame
 
     # 全体設定
     fig.tight_layout()
-    fig.savefig(FilePath.output(f'row_{pref_name.key}_{target.value.key}.png'))
+    fig.savefig(FilePath.output(f'row_{pref.name.key}_{target.value.key}.png'))
     plt.close('all')
 
 
 def make_output_row(target_columns: dict[str, str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
-                    , pref_name: PrefName, target: Grouping):
+                    , pref: Prefecture, target: Grouping):
     df_population = population.get(target.value.key)
     df_infected = infected.get(target.value.key)
 
     # CSV出力
     df_population\
-        .to_csv(FilePath.output(f'row_{pref_name.key}_{target.value.key}_population.csv'), line_terminator="\n")
+        .to_csv(FilePath.output(f'row_{pref.name.key}_{target.value.key}_population.csv'), line_terminator="\n")
     df_infected[list(target_columns.keys())]\
-        .to_csv(FilePath.output(f'row_{pref_name.key}_{target.value.key}_infected.csv'), line_terminator="\n")
+        .to_csv(FilePath.output(f'row_{pref.name.key}_{target.value.key}_infected.csv'), line_terminator="\n")
 
     # グラフ出力
     df_infected_graph = df_infected.reset_index()\
         .set_index('week_start')\
         .rename(columns=target_columns)[list(target_columns.values())]
-    __make_graph_row(df_population, df_infected_graph, pref_name, target)
+    __make_graph_row(df_population, df_infected_graph, pref, target)

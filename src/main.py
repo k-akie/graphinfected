@@ -10,11 +10,24 @@ from type.Grouping import Grouping
 from type.prefecture.PrefCode import PrefCode
 from type.prefecture.PrefName import PrefName
 from type.prefecture.Prefecture import Prefecture
+from type.term.Term import Term
+from type.term.TermType import TermType
 
 if __name__ == '__main__':
     osaka = Prefecture(
         PrefName('osaka', '大阪'),
-        PrefCode('.27')
+        PrefCode('.27'),
+        # 緊急事態宣言等の履歴
+        # https://www.kwm.co.jp/blog/state-of-emergency/
+        [
+            Term('2020-04-07', '2020-05-21', TermType.EMERGENCY, 1),
+            Term('2021-01-14', '2021-02-28', TermType.EMERGENCY, 2),
+            Term('2021-04-05', '2021-04-24', TermType.SEMI_EMERGENCY, 1),
+            Term('2021-04-25', '2021-06-20', TermType.EMERGENCY, 3),
+            Term('2021-06-21', '2021-08-01', TermType.SEMI_EMERGENCY, 2),
+            Term('2021-08-02', '2021-09-30', TermType.EMERGENCY, 4),
+            Term('2022-01-27', '2022-03-21', TermType.SEMI_EMERGENCY, 3),
+        ]
     )
 
     # 入力
@@ -28,6 +41,6 @@ if __name__ == '__main__':
     matplotlib.rc('font', family='BIZ UDGothic')
     for group in Grouping:
         # 割合
-        make_output_ratio(generation_dict, population, infected, osaka.name, group)
+        make_output_ratio(generation_dict, population, infected, osaka, group)
         # 生値
-        make_output_row(generation_dict, population, infected, osaka.name, group)
+        make_output_row(generation_dict, population, infected, osaka, group)
