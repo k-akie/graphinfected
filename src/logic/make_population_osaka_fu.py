@@ -22,32 +22,30 @@ def __read_file(month: datetime, file_path: str) -> DataFrame:
 
 
 def __search_file_list(dir_path: str) -> dict[datetime, str]:
-    repeater = re.compile('[0-9]{6}')
-
     result = {}
     files = glob.glob(dir_path + '/*.xlsx')
+    repeater = re.compile('[0-9]{6}')  # ファイル名の年月yyyymm部分を抽出
     for file in files:
-        target = repeater.search(file).group(0) + '01'
+        target = repeater.search(file).group(0) + '01'  # 年月日yyyymm01の形式にする
         target_datetime = TypeDate.from_str(target, '%Y%m%d')
         result[target_datetime] = file
 
     return result
 
 
-def make_population_csv():
+def make_population_csv(input_dir: str, temp_file_path: str, encode: str):
     # https://www.pref.osaka.lg.jp/toukei/jinkou/jinkou-xlslist.html
     # ひと月ごとにエクセルファイルがある
+    # group by 性別、5歳階級
 
-    output_path = FilePath.input('jinkou-xlslist.csv')
-    if FilePath.exists(output_path):
+    if FilePath.exists(temp_file_path):
         # 出力先ファイルがあれば、再生成しない
         return
 
-    file_map = __search_file_list(FilePath.input('jinkou-xlslist'))
-
+    file_map = __search_file_list(input_dir)
     df_data = pd.DataFrame()
     for key in sorted(file_map.keys()):
         df_data = pd.concat([df_data, __read_file(key, file_map[key])])
-    df_data.sort_values('month', inplace=True)
 
-    df_data.to_csv(output_path, line_terminator="\n")
+    df_data.sort_values('month', inplace=True)
+    df_data.to_csv(temp_file_path, line_terminator="\n", encoding=encode)

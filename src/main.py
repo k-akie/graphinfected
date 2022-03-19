@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     # 入力
     # 人口データ
-    population = read_population_osaka_fu(list(generation_dict.keys()), FilePath.input('jinkou-xlslist.csv'), 'UTF-8')
+    population = read_population_osaka_fu(list(generation_dict.keys()), FilePath.input('jinkou-xlslist'))
     # 感染者数データ
     infected = read_infected(FilePath.input('newly_confirmed_cases_detail_weekly.csv'), 'UTF-8', osaka.code)
 
