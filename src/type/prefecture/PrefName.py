@@ -1,10 +1,10 @@
-class Prefecture:
+class PrefName:
     """
-    都道府県
+    都道府県の名称
 
     Args:
         key     データに指定しているキー値
-        name    表記に使う日本語名称
+        name    表示に使う日本語名称
     """
     key: str
     name: str

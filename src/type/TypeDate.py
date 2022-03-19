@@ -15,7 +15,7 @@ class TypeDate:
         return datetime.date(2022, 5, 1)
 
     @staticmethod
-    def from_str(_value: str, _format: str = '%Y/%m/%d'):  # TODO v3.10に上げたら format() を初期値にする
+    def from_str(_value: str, _format: str = format()):
         return datetime.datetime.strptime(_value, _format)
 
     @staticmethod
