@@ -23,3 +23,6 @@ class Prefecture:
 
     def __str__(self):
         return self.name + ', ' + self.code + ', terms: ' + len(self.terms)
+
+    def key(self) -> str:
+        return self.code.value + '_' + self.name.key

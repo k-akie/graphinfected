@@ -13,10 +13,27 @@ from type.prefecture.Prefecture import Prefecture
 from type.term.Term import Term
 from type.term.TermType import TermType
 
+
+def __make_output(_population, pref):
+    # 感染者数データ
+    infected = read_infected(FilePath.input(osaka.key() + '/newly_confirmed_cases_detail_weekly.csv'),
+                             'UTF-8', pref.code)
+
+    # グラフに日本語を使う設定
+    matplotlib.rc('font', family='BIZ UDGothic')
+    for group in Grouping:
+        # 割合データで出力
+        make_output_ratio(generation_dict, _population, infected, pref, group)
+        # 生値データで出力
+        make_output_row(generation_dict, _population, infected, pref, group)
+
+
 if __name__ == '__main__':
+    # 都道府県設定
+    # 大阪府
     osaka = Prefecture(
         PrefName('osaka', '大阪'),
-        PrefCode('.27'),
+        PrefCode('27'),
         # 緊急事態宣言等の履歴
         # https://www.kwm.co.jp/blog/state-of-emergency/
         [
@@ -29,18 +46,8 @@ if __name__ == '__main__':
             Term('2022-01-27', '2022-03-21', TermType.SEMI_EMERGENCY, 3),
         ]
     )
-
-    # 入力
-    # 人口データ
-    population = read_population_osaka_fu(list(generation_dict.keys()), FilePath.input('jinkou-xlslist'))
-    # 感染者数データ
-    infected = read_infected(FilePath.input('newly_confirmed_cases_detail_weekly.csv'), 'UTF-8', osaka.code)
+    # 人口データ(大阪府)
+    population = read_population_osaka_fu(list(generation_dict.keys()), FilePath.input(osaka.key() + '/jinkou-xlslist'))
 
     # 出力
-    # グラフに日本語を使う設定
-    matplotlib.rc('font', family='BIZ UDGothic')
-    for group in Grouping:
-        # 割合
-        make_output_ratio(generation_dict, population, infected, osaka, group)
-        # 生値
-        make_output_row(generation_dict, population, infected, osaka, group)
+    __make_output(population, osaka)

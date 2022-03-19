@@ -87,7 +87,7 @@ def __make_graph_ratio(df_result: DataFrame, pref: Prefecture, target: Grouping)
 
     # 全体設定
     fig.tight_layout()
-    fig.savefig(FilePath.output(f'ratio_{pref.name.key}_{target.value.key}.png'))
+    fig.savefig(FilePath.output(f'{pref.key()}/ratio_{pref.name.key}_{target.value.key}.png'))
     plt.close('all')
 
 
@@ -97,7 +97,7 @@ def make_output_ratio(target_columns: dict[str, str], population: dict[str, Data
     df_result = __calc_ratio(list(target_columns.keys()), population.get(target.value.key), infected.get(target.value.key))
 
     # CSV出力
-    df_result.to_csv(FilePath.output(f'ratio_{pref.name.key}_{target.value.key}.csv'), line_terminator="\n")
+    df_result.to_csv(FilePath.output(f'{pref.key()}/ratio_{pref.name.key}_{target.value.key}.csv'), line_terminator="\n")
 
     # グラフ出力
     df_result_graph = df_result.rename(columns=target_columns)

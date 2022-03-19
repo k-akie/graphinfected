@@ -12,3 +12,6 @@ class PrefCode:
 
     def __str__(self):
         return self.value
+
+    def key(self) -> str:
+        return '.' + self.value
