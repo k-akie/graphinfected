@@ -16,7 +16,7 @@ from type.term.TermType import TermType
 
 def __make_output(_population, pref):
     # 感染者数データ
-    infected = read_infected(FilePath.input(osaka.key() + '/newly_confirmed_cases_detail_weekly.csv'),
+    infected = read_infected(FilePath.input(pref.key() + '/newly_confirmed_cases_detail_weekly.csv'),
                              'UTF-8', pref.code)
 
     # グラフに日本語を使う設定
