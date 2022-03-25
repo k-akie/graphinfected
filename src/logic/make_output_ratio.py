@@ -8,6 +8,7 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from pandas import DataFrame, Index
 
+from type.OutputFileName import OutputFileName
 from type.FilePath import FilePath
 from type.Grouping import Grouping
 from type.TypeDate import TypeDate
@@ -87,7 +88,7 @@ def __make_graph_ratio(df_result: DataFrame, pref: Prefecture, target: Grouping)
 
     # 全体設定
     fig.tight_layout()
-    fig.savefig(FilePath.output(f'{pref.key()}/ratio_{pref.name.key}_{target.value.key}.png'))
+    fig.savefig(FilePath.output(OutputFileName('ratio', pref, target).graph()))
     plt.close('all')
 
 
@@ -96,9 +97,10 @@ def make_output_ratio(target_columns: dict[str, str]
                       , pref: Prefecture, target: Grouping):
     # 出力用にデータを加工
     df_result = __calc_ratio(list(target_columns.keys()), population.get(target), infected.get(target))
+    outputFileName = OutputFileName('ratio', pref, target)
 
     # CSV出力
-    df_result.to_csv(FilePath.output(f'{pref.key()}/ratio_{pref.name.key}_{target.value.key}.csv'), line_terminator="\n")
+    df_result.to_csv(FilePath.output(outputFileName.csv()), line_terminator="\n")
 
     # グラフ出力
     df_result_graph = df_result.rename(columns=target_columns)
