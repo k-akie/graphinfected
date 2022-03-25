@@ -4,7 +4,7 @@ from logic.make_output_ratio import make_output_ratio
 from logic.make_output_row import make_output_row
 from logic.read_infected import read_infected
 from logic.read_population_osaka_fu import read_population_osaka_fu
-from type.FilePath import FilePath
+from type.file.FilePath import FilePath
 from type.Generation import generation_dict
 from type.Grouping import Grouping
 from type.prefecture.PrefCode import PrefCode

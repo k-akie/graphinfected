@@ -8,7 +8,7 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from pandas import DataFrame, Index
 
-from type.OutputFileName import OutputFileName
+from type.file.OutputFileName import OutputFileName
 from type.Grouping import Grouping
 from type.TypeDate import TypeDate
 from type.prefecture.Prefecture import Prefecture

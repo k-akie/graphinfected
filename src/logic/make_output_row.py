@@ -5,7 +5,7 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from pandas import DataFrame
 
-from type.OutputFileName import OutputFileName
+from type.file.OutputFileName import OutputFileName
 from type.Grouping import Grouping
 from type.TypeDate import TypeDate
 from type.prefecture.Prefecture import Prefecture
@@ -78,10 +78,8 @@ def make_output_row(target_columns: dict[str, str]
     outputFileName = OutputFileName('row', pref, target)
 
     # CSV出力
-    df_population\
-        .to_csv(outputFileName.csv('population'), line_terminator="\n")
-    df_infected[list(target_columns.keys())]\
-        .to_csv(outputFileName.csv('infected'), line_terminator="\n")
+    df_population.to_csv(outputFileName.csv('population'), line_terminator="\n")
+    df_infected[list(target_columns.keys())].to_csv(outputFileName.csv('infected'), line_terminator="\n")
 
     # グラフ出力
     df_infected_graph = df_infected.reset_index()\

@@ -1,4 +1,4 @@
-from type.FilePath import FilePath
+from type.file.FilePath import FilePath
 from type.Grouping import Grouping
 from type.prefecture.Prefecture import Prefecture
 
