@@ -70,10 +70,11 @@ def __make_graph_row(df_population: DataFrame, df_infected: DataFrame
     plt.close('all')
 
 
-def make_output_row(target_columns: dict[str, str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
+def make_output_row(target_columns: dict[str, str]
+                    , population: dict[Grouping, DataFrame], infected: dict[Grouping, DataFrame]
                     , pref: Prefecture, target: Grouping):
-    df_population = population.get(target.value.key)
-    df_infected = infected.get(target.value.key)
+    df_population = population.get(target)
+    df_infected = infected.get(target)
 
     # CSV出力
     df_population\

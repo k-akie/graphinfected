@@ -91,10 +91,11 @@ def __make_graph_ratio(df_result: DataFrame, pref: Prefecture, target: Grouping)
     plt.close('all')
 
 
-def make_output_ratio(target_columns: dict[str, str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
+def make_output_ratio(target_columns: dict[str, str]
+                      , population: dict[Grouping, DataFrame], infected: dict[Grouping, DataFrame]
                       , pref: Prefecture, target: Grouping):
     # 出力用にデータを加工
-    df_result = __calc_ratio(list(target_columns.keys()), population.get(target.value.key), infected.get(target.value.key))
+    df_result = __calc_ratio(list(target_columns.keys()), population.get(target), infected.get(target))
 
     # CSV出力
     df_result.to_csv(FilePath.output(f'{pref.key()}/ratio_{pref.name.key}_{target.value.key}.csv'), line_terminator="\n")
