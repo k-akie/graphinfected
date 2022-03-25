@@ -6,7 +6,6 @@ from matplotlib.figure import Figure
 from pandas import DataFrame
 
 from type.OutputFileName import OutputFileName
-from type.FilePath import FilePath
 from type.Grouping import Grouping
 from type.TypeDate import TypeDate
 from type.prefecture.Prefecture import Prefecture
@@ -67,7 +66,7 @@ def __make_graph_row(df_population: DataFrame, df_infected: DataFrame
 
     # 全体設定
     fig.tight_layout()
-    fig.savefig(FilePath.output(OutputFileName('row', pref, target).graph()))
+    fig.savefig(OutputFileName('row', pref, target).graph())
     plt.close('all')
 
 
@@ -80,9 +79,9 @@ def make_output_row(target_columns: dict[str, str]
 
     # CSV出力
     df_population\
-        .to_csv(FilePath.output(outputFileName.csv('population')), line_terminator="\n")
+        .to_csv(outputFileName.csv('population'), line_terminator="\n")
     df_infected[list(target_columns.keys())]\
-        .to_csv(FilePath.output(outputFileName.csv('infected')), line_terminator="\n")
+        .to_csv(outputFileName.csv('infected'), line_terminator="\n")
 
     # グラフ出力
     df_infected_graph = df_infected.reset_index()\
