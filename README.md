@@ -9,10 +9,11 @@
 ## データ準備
 ### 人口データ
 - 大阪府の毎月推計人口 https://www.pref.osaka.lg.jp/toukei/jinkou/jinkou-xlslist.html
-  - 「年齢（５歳階級）別推計人口」のエクセルファイルを`output/jinkou-xlslist`フォルダに格納
+  - 「年齢（５歳階級）別推計人口」のエクセルファイルを`input/27_osaka/jinkou-xlslist`フォルダに格納
+  
 ### 感染者数データ 
 - 厚生労働省 感染者動向 https://covid19.mhlw.go.jp/extensions/public/index.html
-  - 「性別・年代別新規陽性者数（週別）」のオープンデータを`output`フォルダに格納
+  - 「性別・年代別新規陽性者数（週別）」のオープンデータを`input`フォルダに格納
 
 ## 実行手順
 人口データ、感染者数データを読み込んで、CSV、グラフを出力する
