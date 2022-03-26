@@ -4,7 +4,7 @@ from logic.make_output_ratio import make_output_ratio
 from logic.make_output_row import make_output_row
 from logic.read_infected import read_infected
 from logic.read_population_osaka_fu import read_population_osaka_fu
-from type.FilePath import FilePath
+from type.file.FilePath import FilePath
 from type.Generation import generation_dict
 from type.Grouping import Grouping
 from type.prefecture.PrefCode import PrefCode
@@ -16,8 +16,7 @@ from type.term.TermType import TermType
 
 def __make_output(_population, pref):
     # 感染者数データ
-    infected = read_infected(FilePath.input(osaka.key() + '/newly_confirmed_cases_detail_weekly.csv'),
-                             'UTF-8', pref.code)
+    infected = read_infected(FilePath.input('newly_confirmed_cases_detail_weekly.csv'), 'UTF-8', pref.code)
 
     # グラフに日本語を使う設定
     matplotlib.rc('font', family='BIZ UDGothic')

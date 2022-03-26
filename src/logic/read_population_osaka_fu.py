@@ -2,6 +2,7 @@ import pandas as pd
 from pandas import DataFrame
 
 from logic.make_population_osaka_fu import make_population_csv
+from type.Grouping import Grouping
 
 
 def __joined_population(period_array: list[str], df_input: DataFrame) -> DataFrame:
@@ -28,7 +29,7 @@ def __joined_population(period_array: list[str], df_input: DataFrame) -> DataFra
     return df_results
 
 
-def read_population_osaka_fu(period_array: list[str], input_dir: str):
+def read_population_osaka_fu(period_array: list[str], input_dir: str) -> dict[Grouping, DataFrame]:
     encode = 'UTF-8'
     temp_file_path = input_dir + '.csv'
 
@@ -43,4 +44,4 @@ def read_population_osaka_fu(period_array: list[str], input_dir: str):
     male = __joined_population(period_array, osaka_fu_male)
     female = __joined_population(period_array, osaka_fu_female)
 
-    return {'male': male, 'female': female, 'all': male + female}
+    return {Grouping.MALE: male, Grouping.FEMALE: female, Grouping.ALL: male + female}

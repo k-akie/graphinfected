@@ -1,5 +1,6 @@
 import pandas as pd
 
+from type.Grouping import Grouping
 from type.TypeDate import TypeDate
 from type.prefecture.PrefCode import PrefCode
 
@@ -7,7 +8,7 @@ from type.prefecture.PrefCode import PrefCode
 # 性別・年代別新規陽性者数（週別）
 # group by 都道府県、性別、10歳階級
 # https://covid19.mhlw.go.jp/extensions/public/index.html
-def read_infected(file_path: str, encode: str, pref_code: PrefCode):
+def read_infected(file_path: str, encode: str, pref_code: PrefCode) -> dict[Grouping, pd.DataFrame]:
     csv_input = pd.read_csv(filepath_or_buffer=file_path, encoding=encode, sep=",", header=1, index_col=0)
     osaka_fu = csv_input.filter(like=pref_code.key(), axis='columns')
 
@@ -29,8 +30,8 @@ def read_infected(file_path: str, encode: str, pref_code: PrefCode):
         .rename(columns=lambda s: s.removeprefix('Female ')) \
         .rename(columns=lambda s: s.removesuffix(pref_code.key())) \
 
-    result_male = male.reset_index().join([df_month]).set_index('Week')
-    result_female = female.reset_index().join([df_month]).set_index('Week')
-    result_all = (male + female).reset_index().join([df_month]).set_index('Week')
+    result_male: pd.DataFrame = male.reset_index().join([df_month]).set_index('Week')
+    result_female: pd.DataFrame = female.reset_index().join([df_month]).set_index('Week')
+    result_all: pd.DataFrame = (male + female).reset_index().join([df_month]).set_index('Week')
 
-    return {'male': result_male, 'female': result_female, 'all': result_all}
+    return {Grouping.MALE: result_male, Grouping.FEMALE: result_female, Grouping.ALL: result_all}

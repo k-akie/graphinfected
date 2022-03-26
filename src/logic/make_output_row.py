@@ -5,7 +5,7 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from pandas import DataFrame
 
-from type.FilePath import FilePath
+from type.file.OutputFileName import OutputFileName
 from type.Grouping import Grouping
 from type.TypeDate import TypeDate
 from type.prefecture.Prefecture import Prefecture
@@ -66,20 +66,20 @@ def __make_graph_row(df_population: DataFrame, df_infected: DataFrame
 
     # 全体設定
     fig.tight_layout()
-    fig.savefig(FilePath.output(f'{pref.key()}/row_{pref.name.key}_{target.value.key}.png'))
+    fig.savefig(OutputFileName('row', pref, target).graph())
     plt.close('all')
 
 
-def make_output_row(target_columns: dict[str, str], population: dict[str, DataFrame], infected: dict[str, DataFrame]
+def make_output_row(target_columns: dict[str, str]
+                    , population: dict[Grouping, DataFrame], infected: dict[Grouping, DataFrame]
                     , pref: Prefecture, target: Grouping):
-    df_population = population.get(target.value.key)
-    df_infected = infected.get(target.value.key)
+    df_population = population.get(target)
+    df_infected = infected.get(target)
+    outputFileName = OutputFileName('row', pref, target)
 
     # CSV出力
-    df_population\
-        .to_csv(FilePath.output(f'{pref.key()}/row_{pref.name.key}_{target.value.key}_population.csv'), line_terminator="\n")
-    df_infected[list(target_columns.keys())]\
-        .to_csv(FilePath.output(f'{pref.key()}/row_{pref.name.key}_{target.value.key}_infected.csv'), line_terminator="\n")
+    df_population.to_csv(outputFileName.csv('population'), line_terminator="\n")
+    df_infected[list(target_columns.keys())].to_csv(outputFileName.csv('infected'), line_terminator="\n")
 
     # グラフ出力
     df_infected_graph = df_infected.reset_index()\

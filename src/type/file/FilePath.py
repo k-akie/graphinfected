@@ -4,7 +4,7 @@ import os
 class FilePath:
     @staticmethod
     def __root() -> str:
-        return os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        return os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
     @staticmethod
     def input(path: str = '') -> str:
