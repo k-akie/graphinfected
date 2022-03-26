@@ -1,9 +1,10 @@
 import matplotlib
+from pandas import DataFrame
 
 from logic.make_output_ratio import make_output_ratio
 from logic.make_output_row import make_output_row
 from logic.read_infected import read_infected
-from logic.read_population_osaka_fu import read_population_osaka_fu
+from logic.read_population import read_population
 from type.file.FilePath import FilePath
 from type.Generation import generation_dict
 from type.Grouping import Grouping
@@ -14,24 +15,21 @@ from type.term.Term import Term
 from type.term.TermType import TermType
 
 
-def __make_output(_population, pref):
-    # 感染者数データ
-    infected = read_infected(FilePath.input('newly_confirmed_cases_detail_weekly.csv'), 'UTF-8', pref.code)
-
+def __make_output(_population: dict[Grouping, DataFrame], _infected: dict[Grouping, DataFrame], pref):
     # グラフに日本語を使う設定
     matplotlib.rc('font', family='BIZ UDGothic')
     for group in Grouping:
         # 割合データで出力
-        make_output_ratio(generation_dict, _population, infected, pref, group)
+        make_output_ratio(generation_dict, _population, _infected, pref, group)
         # 生値データで出力
-        make_output_row(generation_dict, _population, infected, pref, group)
+        make_output_row(generation_dict, _population, _infected, pref, group)
 
 
 if __name__ == '__main__':
     # 都道府県設定
     # 大阪府
     osaka = Prefecture(
-        PrefName('osaka', '大阪'),
+        PrefName('osaka', '大阪府'),
         PrefCode('27'),
         # 緊急事態宣言等の履歴
         # https://www.kwm.co.jp/blog/state-of-emergency/
@@ -45,8 +43,13 @@ if __name__ == '__main__':
             Term('2022-01-27', '2022-03-21', TermType.SEMI_EMERGENCY, 3),
         ]
     )
-    # 人口データ(大阪府)
-    population = read_population_osaka_fu(list(generation_dict.keys()), FilePath.input(osaka.key() + '/jinkou-xlslist'))
+
+    # 人口データ
+    population: dict[Grouping, DataFrame] = read_population(FilePath.input('stnen'), 'UTF-8', osaka)
+
+    # 感染者数データ
+    infected: dict[Grouping, DataFrame] = read_infected(
+        FilePath.input('newly_confirmed_cases_detail_weekly.csv'), 'UTF-8', osaka.code)
 
     # 出力
-    __make_output(population, osaka)
+    __make_output(population, infected, osaka)

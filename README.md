@@ -8,12 +8,12 @@
 
 ## データ準備
 ### 人口データ
-- 大阪府の毎月推計人口 https://www.pref.osaka.lg.jp/toukei/jinkou/jinkou-xlslist.html
-  - 「年齢（５歳階級）別推計人口」のエクセルファイルを`input/27_osaka/jinkou-xlslist`フォルダに格納
-  
+- 全国の都道府県別の年次人口 https://www.e-stat.go.jp/stat-search/files?page=1&layout=datalist&toukei=00200241&tstat=000001039591&cycle=7&tclass1=000001039601&tclass2val=0
+  - 「【総計】都道府県別年齢階級別人口」のエクセルファイルを`input/stnen`フォルダに格納 ※年次
+
 ### 感染者数データ 
 - 厚生労働省 感染者動向 https://covid19.mhlw.go.jp/extensions/public/index.html
-  - 「性別・年代別新規陽性者数（週別）」のオープンデータを`input`フォルダに格納
+  - 「性別・年代別新規陽性者数（週別）」のオープンデータを`input`フォルダに格納 ※週次
 
 ## 実行手順
 人口データ、感染者数データを読み込んで、CSV、グラフを出力する
@@ -25,7 +25,7 @@ python ./src/main.py
 - 人口データ
   - エクセルから毎回取得しなおすのは大変なので、中間ファイルがないときだけエクセルから中間ファイルを生成する
   - 新しい人口データファイルを追加したら、中間ファイルを削除する
-  - 中間ファイル `./input/jinkou-xlslist.csv`
+  - 中間ファイル `./input/stnen.csv`
 
 ## 出力例
 ### グラフ

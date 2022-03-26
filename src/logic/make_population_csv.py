@@ -66,8 +66,3 @@ def make_population_all_pref_csv(input_dir: str, temp_file_path: str, encode: st
         df_data = pd.concat([df_data, __read_file(key, file_map[key], _period_array)])
 
     df_data.to_csv(temp_file_path, line_terminator="\n", encoding=encode)
-
-
-# period_array: list[str] = list(generation_dict.keys())
-# fileName = 'C:\work\graphinfected\input\stnen'
-# make_population_all_pref_csv(fileName, fileName + '.csv', 'UTF-8', period_array)
