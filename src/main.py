@@ -15,6 +15,10 @@ from type.Grouping import Grouping
 def __make_output(_population: dict[Grouping, DataFrame], _infected: dict[Grouping, DataFrame], pref):
     # グラフに日本語を使う設定
     matplotlib.rc('font', family='BIZ UDGothic')
+
+    # 出力フォルダがなかったら作成する
+    FilePath.mkdir(FilePath.output(pref.key()))
+
     for group in Grouping:
         target_population = _population.get(group).xs(pref.name.name, level='都道府県名', axis='index')
 
@@ -42,5 +46,5 @@ if __name__ == '__main__':
         FilePath.input('newly_confirmed_cases_detail_weekly.csv'), 'UTF-8')
 
     # # 出力
-    input_pref = InputPrefs.prefs[0]
-    __make_output(population, infected, input_pref)
+    for input_pref in InputPrefs.prefs:
+        __make_output(population, infected, input_pref)

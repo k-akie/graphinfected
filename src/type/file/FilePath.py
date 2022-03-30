@@ -17,3 +17,8 @@ class FilePath:
     @staticmethod
     def exists(path: str) -> bool:
         return os.path.exists(path)
+
+    @staticmethod
+    def mkdir(path: str):
+        if not FilePath.exists(path):
+            os.mkdir(path)
