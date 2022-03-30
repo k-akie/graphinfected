@@ -4,13 +4,12 @@ from pandas import DataFrame
 from logic.make_population_csv import make_population_all_pref_csv
 from type.Generation import generation_dict
 from type.Grouping import Grouping
-from type.prefecture.Prefecture import Prefecture
 
 
 # 【総計】都道府県別年齢階級別人口
 # group by 都道府県、性別、10歳階級
 # https://www.e-stat.go.jp/stat-search/files?page=1&layout=datalist&toukei=00200241&tstat=000001039591&cycle=7&tclass1=000001039601&tclass2val=0
-def read_population(input_dir: str, encode: str, pref: Prefecture) -> dict[Grouping, DataFrame]:
+def read_population(input_dir: str, encode: str) -> dict[Grouping, DataFrame]:
     temp_file_path = input_dir + '.csv'
 
     # エクセル -> CSVにする
@@ -22,9 +21,9 @@ def read_population(input_dir: str, encode: str, pref: Prefecture) -> dict[Group
     # 元データのインデックスを日付扱いする
     csv_input.index = pd.to_datetime(csv_input.index.to_series())
 
-    csv_pref = csv_input.reset_index().set_index(['都道府県名', '性別', 'month']).loc[pref.name.name]
-    csv_all = csv_pref.loc['計']
-    csv_male = csv_pref.loc['男']
-    csv_female = csv_pref.loc['女']
+    csv_pref = csv_input.reset_index().set_index(['都道府県名', '性別', 'month'])
+    csv_all = csv_pref.xs('計', level='性別', axis='index')
+    csv_male = csv_pref.xs('男', level='性別', axis='index')
+    csv_female = csv_pref.xs('女', level='性別', axis='index')
 
     return {Grouping.MALE: csv_male, Grouping.FEMALE: csv_female, Grouping.ALL: csv_all}
