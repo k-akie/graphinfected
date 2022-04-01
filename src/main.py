@@ -45,6 +45,6 @@ if __name__ == '__main__':
     infected: dict[Grouping, DataFrame] = read_infected(
         FilePath.input('newly_confirmed_cases_detail_weekly.csv'), 'UTF-8')
 
-    # # 出力
+    # 出力
     for input_pref in InputPrefs.prefs:
         __make_output(population, infected, input_pref)
