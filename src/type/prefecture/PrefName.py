@@ -4,7 +4,7 @@ class PrefName:
 
     Args:
         key     データに指定しているキー値
-        name    表示に使う日本語名称
+        name    表示に使う日本語名称(都道府県まで含めること)
     """
     key: str
     name: str

@@ -71,18 +71,16 @@ def __make_graph_row(df_population: DataFrame, df_infected: DataFrame
 
 
 def make_output_row(target_columns: dict[str, str]
-                    , population: dict[Grouping, DataFrame], infected: dict[Grouping, DataFrame]
+                    , population: DataFrame, infected: DataFrame
                     , pref: Prefecture, target: Grouping):
-    df_population = population.get(target)
-    df_infected = infected.get(target)
     outputFileName = OutputFileName('row', pref, target)
 
     # CSV出力
-    df_population.to_csv(outputFileName.csv('population'), line_terminator="\n")
-    df_infected[list(target_columns.keys())].to_csv(outputFileName.csv('infected'), line_terminator="\n")
+    population.to_csv(outputFileName.csv('population'), line_terminator="\n")
+    infected[list(target_columns.keys())].to_csv(outputFileName.csv('infected'), line_terminator="\n")
 
     # グラフ出力
-    df_infected_graph = df_infected.reset_index()\
+    df_infected_graph = infected.reset_index()\
         .set_index('week_start')\
         .rename(columns=target_columns)[list(target_columns.values())]
-    __make_graph_row(df_population, df_infected_graph, pref, target)
+    __make_graph_row(population, df_infected_graph, pref, target)
